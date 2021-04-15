@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <uml:Model xmi:id="_RKpQsJ3GEeubWeXAMIQrFw" name="HospitalProject">
+    <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+      <eAnnotations xmi:id="_RKpQsJ3GEeubWeXAMIQrFw0" source="genmymodel">
+        <details xmi:id="_RKpQsJ3GEeubWeXAMIQrFw00" key="uuid" value="_RKpQsJ3GEeubWeXAMIQrFw"/>
+        <details xmi:id="_RKpQsJ3GEeubWeXAMIQrFw01" key="author" value="dariust1710"/>
+      </eAnnotations>
+    </xmi:Extension>
+    <packageImport xmi:id="_RKpQsZ3GEeubWeXAMIQrFw" importingNamespace="_RKpQsJ3GEeubWeXAMIQrFw">
+      <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+        <eAnnotations xmi:id="_RKpQsZ3GEeubWeXAMIQrFw0" source="genmymodel">
+          <details xmi:id="_RKpQsZ3GEeubWeXAMIQrFw00" key="uuid" value="_RKpQsZ3GEeubWeXAMIQrFw"/>
+        </eAnnotations>
+      </xmi:Extension>
+      <importedPackage href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#/"/>
+    </packageImport>
+    <packagedElement xsi:type="uml:Class" xmi:id="_SUuncH_0EDmyJ-KXfduYvg" name="Patient">
+      <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+        <eAnnotations xmi:id="_SUuncH_0EDmyJ-KXfduYvg0" source="genmymodel">
+          <details xmi:id="_SUuncH_0EDmyJ-KXfduYvg00" key="uuid" value="_SUuncH_0EDmyJ-KXfduYvg"/>
+        </eAnnotations>
+      </xmi:Extension>
+      <ownedAttribute xmi:id="_WOFeoX_0EDmyJ-KXfduYvg" name="Id" visibility="private">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_WOFeoX_0EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_WOFeoX_0EDmyJ-KXfduYvg00" key="uuid" value="_WOFeoX_0EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_dkCYgX_0EDmyJ-KXfduYvg" name="RandomGenetic" visibility="private">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_dkCYgX_0EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_dkCYgX_0EDmyJ-KXfduYvg00" key="uuid" value="_dkCYgX_0EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xsi:type="uml:Class" xmi:id="_kII-sH_0EDmyJ-KXfduYvg" name="HcareWorker">
+      <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+        <eAnnotations xmi:id="_kII-sH_0EDmyJ-KXfduYvg0" source="genmymodel">
+          <details xmi:id="_kII-sH_0EDmyJ-KXfduYvg00" key="uuid" value="_kII-sH_0EDmyJ-KXfduYvg"/>
+        </eAnnotations>
+      </xmi:Extension>
+      <ownedAttribute xmi:id="_kvi88X_0EDmyJ-KXfduYvg" name="Id" visibility="private">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_kvi88X_0EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_kvi88X_0EDmyJ-KXfduYvg00" key="uuid" value="_kvi88X_0EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_yB3uoX_0EDmyJ-KXfduYvg" name="PVaccinated" visibility="private">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_yB3uoX_0EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_yB3uoX_0EDmyJ-KXfduYvg00" key="uuid" value="_yB3uoX_0EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_TRGToX_1EDmyJ-KXfduYvg" name="VPost" visibility="private">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_TRGToX_1EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_TRGToX_1EDmyJ-KXfduYvg00" key="uuid" value="_TRGToX_1EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+      </ownedAttribute>
+      <ownedOperation xmi:id="_1Y7xEX_0EDmyJ-KXfduYvg" name="VaccinatePatient" class="_kII-sH_0EDmyJ-KXfduYvg">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_1Y7xEX_0EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_1Y7xEX_0EDmyJ-KXfduYvg00" key="uuid" value="_1Y7xEX_0EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <ownedParameter xmi:id="_6BbmMX_0EDmyJ-KXfduYvg" name="parameter" direction="return">
+          <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+            <eAnnotations xmi:id="_6BbmMX_0EDmyJ-KXfduYvg0" source="genmymodel">
+              <details xmi:id="_6BbmMX_0EDmyJ-KXfduYvg00" key="uuid" value="_6BbmMX_0EDmyJ-KXfduYvg"/>
+            </eAnnotations>
+          </xmi:Extension>
+        </ownedParameter>
+        <ownedParameter xmi:id="_HWm3kH_1EDmyJ-KXfduYvg" name="parameter2" type="_SUuncH_0EDmyJ-KXfduYvg" isUnique="false">
+          <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+            <eAnnotations xmi:id="_HWm3kH_1EDmyJ-KXfduYvg0" source="genmymodel">
+              <details xmi:id="_HWm3kH_1EDmyJ-KXfduYvg00" key="uuid" value="_HWm3kH_1EDmyJ-KXfduYvg"/>
+            </eAnnotations>
+          </xmi:Extension>
+        </ownedParameter>
+        <ownedParameter xmi:id="_H-f-AH_1EDmyJ-KXfduYvg" name="parameter3" isUnique="false">
+          <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+            <eAnnotations xmi:id="_H-f-AH_1EDmyJ-KXfduYvg0" source="genmymodel">
+              <details xmi:id="_H-f-AH_1EDmyJ-KXfduYvg00" key="uuid" value="_H-f-AH_1EDmyJ-KXfduYvg"/>
+            </eAnnotations>
+          </xmi:Extension>
+          <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+        </ownedParameter>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Of09AX_1EDmyJ-KXfduYvg" name="TakeBreak" class="_kII-sH_0EDmyJ-KXfduYvg">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_Of09AX_1EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_Of09AX_1EDmyJ-KXfduYvg00" key="uuid" value="_Of09AX_1EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xsi:type="uml:Class" xmi:id="_5m_W0H_9EDmyJ-KXfduYvg" name="AuxWorker">
+      <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+        <eAnnotations xmi:id="_5m_W0H_9EDmyJ-KXfduYvg0" source="genmymodel">
+          <details xmi:id="_5m_W0H_9EDmyJ-KXfduYvg00" key="uuid" value="_5m_W0H_9EDmyJ-KXfduYvg"/>
+        </eAnnotations>
+      </xmi:Extension>
+      <ownedAttribute xmi:id="_7bI1AX_9EDmyJ-KXfduYvg" name="Id" visibility="private">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_7bI1AX_9EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_7bI1AX_9EDmyJ-KXfduYvg00" key="uuid" value="_7bI1AX_9EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+      </ownedAttribute>
+      <ownedOperation xmi:id="_AyCoQH_-EDmyJ-KXfduYvg" name="CheckArrivingPatient" class="_5m_W0H_9EDmyJ-KXfduYvg">
+        <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+          <eAnnotations xmi:id="_AyCoQH_-EDmyJ-KXfduYvg0" source="genmymodel">
+            <details xmi:id="_AyCoQH_-EDmyJ-KXfduYvg00" key="uuid" value="_AyCoQH_-EDmyJ-KXfduYvg"/>
+          </eAnnotations>
+        </xmi:Extension>
+        <ownedParameter xmi:id="_PdtLcH_-EDmyJ-KXfduYvg" name="returnParameter" isUnique="false" direction="return">
+          <xmi:Extension extender="http://www.eclipse.org/emf/2002/Ecore">
+            <eAnnotations xmi:id="_PdtLcH_-EDmyJ-KXfduYvg0" source="genmymodel">
+              <details xmi:id="_PdtLcH_-EDmyJ-KXfduYvg00" key="uuid" value="_PdtLcH_-EDmyJ-KXfduYvg"/>
+            </eAnnotations>
+          </xmi:Extension>
+          <type xsi:type="uml:PrimitiveType" href="http://www.omg.org/spec/UML/20131001/PrimitiveTypes.xmi#//Integer"/>
+        </ownedParameter>
+      </ownedOperation>
+    </packagedElement>
+  </uml:Model>
+</xmi:XMI>

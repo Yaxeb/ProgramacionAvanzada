@@ -9,19 +9,34 @@ package pecl;
  * @author Oqueo
  */
 public class Patient extends Thread{
-    private int pid;
-    private int randomGenetic;
-
-    public Patient(int pid) {
+    private final int pid;
+    private final int randomChance;
+    private Hospital hospital;
+    
+    public Patient(int pid, Hospital hospital) {
         this.pid = pid;
-        this.randomGenetic = (int) (Math.random() * 100);
+        this.randomChance = (int) (Math.random() * 101);
+        
     }
-
+    
+    @Override
+    public void run(){
+        hospital.enterHospital(this);
+        if (hospital.enterReception(this, hospital.get) == 1) {
+            hospital.enterVaccRoom(this);
+            hospital.enterObservationRoom(this);
+        } 
+    }
+    
     public int getPid() {
         return pid;
     }
 
     public boolean isInfected() {
-        return randomGenetic <= 5;
+        return randomChance <= 5;
+    }
+    
+    public boolean hasAppointment(){
+        return randomChance == 0;
     }
 }

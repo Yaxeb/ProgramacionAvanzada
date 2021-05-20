@@ -12,14 +12,14 @@ package pecl;
 public class HcareWorker extends Thread{
     private int hid;
     private int pVaccinated;
-    private int vPost;
-
+    private int iDDesk;
+    
     public HcareWorker(int id, int pVaccinated, int vPost) {
         this.hid = id;
         this.pVaccinated = pVaccinated;
-        this.vPost = vPost;
+        this.iDDesk = vPost;
     }
-    
+       
     public void vaccinatePatient(Patient p, int number){
         
     }
@@ -41,11 +41,11 @@ public class HcareWorker extends Thread{
     }
 
     public int getvPost() {
-        return vPost;
+        return iDDesk;
     }
 
-    public void setvPost(int vPost) {
-        this.vPost = vPost;
+    public void setvPost(int iDDesk) {
+        this.iDDesk = iDDesk;
     }
     
     

@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pecl;
 
-/**
- *
- * @author Oqueo
- */
 public class AuxWorker extends Thread {
     private int aid;
     private int maximum; // maximum means how many items/patients
@@ -28,11 +19,16 @@ public class AuxWorker extends Thread {
             /* atender al usuario, en caso de que no haya ninguno, a dormir...
                si hay alguno, mirar si tiene cita (atributo randomChance)
                subir el contador counter en 1, enviar al paciente a otra cola 
-               y anteder al siguiente, 
+               y anteder al siguiente paciente.
+               sincronizando una arrayList, comprueba la lista de mesas despues de que atienda
+               a un paciente y antes de que se vaya a dormir (descanso)
+               si hay un hueco libre, despierta a un paciente y le pasa a que mesa ir.
+               cuando atiende a 10 usuarios se toma un descanso de 3-5 segundos
              */
         } else { // vaccination assistant
-            /*
-            
+            /* crea vacunas con un intervalo de 0.5-1 segundos
+               cuando llega a 20 vacunas se toma un descanso de 1-4 segundos
+               vuelve al trabajo
             */
         }
     }

@@ -1,13 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pecl;
-/**
- *
- * @author Oqueo
- */
+
 public class Patient extends Thread{
     private final int pid;
     private final int randomChance;
@@ -22,9 +14,10 @@ public class Patient extends Thread{
     @Override
     public void run(){
         hospital.enterHospital(this);
-        if (hospital.enterReception(this, hospital.get) == 1) {
-            hospital.enterVaccRoom(this);
-            hospital.enterObservationRoom(this);
+        int iDDesk = hospital.enterReception(this, hospital.get);
+        if ( iDDesk != 0) {
+            int obsDesk = hospital.enterVaccRoom(this, iDDesk);
+            hospital.enterObservationRoom(this, obsDesk);
         } 
     }
     

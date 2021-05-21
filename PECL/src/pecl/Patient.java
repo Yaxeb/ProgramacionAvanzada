@@ -16,9 +16,12 @@ public class Patient extends Thread{
         hospital.enterHospital(this);
         int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());
         if ( iDDesk != 0) { // tendre que comprobarlo varias veces en bucle
+            // while hasta que obtenga obs desk. si no, esperar... o que le despierten...
+            
             int obsDesk = hospital.enterVaccRoom(this, iDDesk);
+             
             hospital.enterObservationRoom(this, obsDesk);
-        } 
+        }
     }
     
     public int getPid() {

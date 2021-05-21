@@ -13,15 +13,22 @@ public class VaccRoom {
     private Semaphore desksSemaphore = new Semaphore(1);
     private Lock desksLock = new ReentrantLock();
     private Condition availableDesk = desksLock.newCondition();
+    private Hospital hospital;
+
+    public VaccRoom(Hospital hospital) {
+        this.hospital = hospital;
+    }
     
     public void sitPatient(Patient patient, int iDDesk){
         try{
             desksLock.lock();
+            Desk d = desks.get(iDDesk-1);
+            d.setPatient(patient.getPid());
+            desks.set(iDDesk-1, d);
         }catch(Exception e){}
-        Desk d = desks.get(iDDesk-1);
-        d.setPatient(patient.getPid());
-        desks.set(iDDesk-1, d);
-        desksLock.unlock();
+        finally{
+            desksLock.unlock();
+        }
     }
     
     public void exitPatient(Patient patient, int iDDesk){

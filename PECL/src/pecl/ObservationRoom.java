@@ -8,17 +8,23 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ObservationRoom {
     ArrayList<Desk> desks = new ArrayList(20);
     //private Semaphore desksSemaphore = new Semaphore(1);
+    private Hospital hospital; 
     private Lock desksLock = new ReentrantLock();
     private Condition availableDesk = desksLock.newCondition();
     
+    public ObservationRoom(Hospital hospital){
+        this.hospital = hospital;
+    }
     public void sitPatient(Patient patient, int iDDesk){
         try{
             desksLock.lock();
+            Desk d = desks.get(iDDesk-1);
+            d.setPatient(patient.getPid());
+            desks.set(iDDesk-1, d);
         }catch(Exception e){}
-        Desk d = desks.get(iDDesk-1);
-        d.setPatient(patient.getPid());
-        desks.set(iDDesk-1, d);
-        desksLock.unlock();
+        finally{
+            desksLock.unlock();
+        }
     }
     
     public void exitPatient(Patient patient, int iDDesk){
@@ -67,5 +73,22 @@ public class ObservationRoom {
             desksLock.unlock();
         }
         return i;
-    }    
+    }
+    
+    public int checkComplications(){
+        int counter = 0;
+        try{
+            desksLock.lock();
+            for (int i = 0; i<desks.size(); i++)
+            {
+                if (hospital.getPatient(desks.get(i).getPatient()).isInfected()){
+                    counter++;
+                }
+            }
+        }catch(Exception e){}
+        finally{
+            desksLock.unlock();
+        }
+        return counter;
+    }
 }

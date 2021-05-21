@@ -1,26 +1,51 @@
 package pecl;
 
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Hospital {
     private final Reception reception;
     private final VaccRoom vaccRoom;
+    private final ObservationRoom obsRoom;
     private final AtomicInteger capacity;
+    private Semaphore semEnterVacc = new Semaphore(10);
+    private Semaphore semEnterObs = new Semaphore(20);
     
-    public Hospital(Reception reception, VaccRoom vaccRoom) {
+    public Hospital(Reception reception, VaccRoom vaccRoom, ObservationRoom obsRoom) {
         this.capacity = new AtomicInteger();
         this.reception = reception;
         this.vaccRoom = vaccRoom;
+        this.obsRoom = obsRoom;
     }
     
     public void enterHospital(Patient patient){
         capacity.set(capacity.addAndGet(1));
-        
+        reception.enterWaitingQueue(patient);
         // queda hacer las comprobaciones y mandarle a dormir        
         // quitarlo de la lista? 
     }
     
-    public int enterReception(Patient patient, AuxWorker aWorker){
+    public synchronized int enterReception(Patient patient, AuxWorker aWorker){
+        while(aWorker.isResting()){ //if the recepcionist is on break, the 
+            try{                    //patient will wait until it comes back
+                wait();
+            }catch(Exception e){}
+        }
+        if (patient.hasAppointment()){
+            reception.exitWaitingQueue(patient);
+            reception.enterEnteringQueue(patient);
+            //If there is any available desk
+            try{
+                semEnterVacc.acquire();
+            }catch(Exception e){}
+            //auxworker tells patient the desk id
+            int vacDesk = aWorker.availableDesk();
+            reception.exitEnteringQueue(patient);// the patient leaves the reception room
+            return vacDesk;                      // the id of its desk is returned
+        }else{
+            reception.exitWaitingQueue(patient); //the patient didn't have an appointment
+            return 0;                           // so it leaves the hospital
+        }
         /*
         hablar con el asistente y mirar si está en lista...
         Si está en lista se va a la enteringQ y sigue normal, return el numero de la mesa
@@ -32,12 +57,21 @@ public class Hospital {
             
         //}
         //aworker.tellMeTheDesk()
-        
-        return 1; // return numero de mesa   
     }
     
     
     public int enterVaccRoom(Patient patient, int iDDesk){
+        vaccRoom.sitPatient(patient, iDDesk);
+        //communication between the worker and the patient to know the 
+        //duration of the vaccine
+        try{                            //we try to enter the observation room
+                semEnterObs.acquire();
+            }catch(Exception e){}
+        int obsDesk = obsRoom.getAvailableDesk();
+        vaccRoom.exitPatient(patient,iDDesk); // it leaves the desk
+        semEnterVacc.release();
+        return obsDesk;
+        
         /*    
         ir de golpe a la mesa iDDesk la que tenga que ir. (sentarse)
         Comunicarse con el trabajador de cuanto tiempo va a 
@@ -52,6 +86,15 @@ public class Hospital {
     
     
     public void enterObservationRoom(Patient patient, int iDDesk){
+        obsRoom.sitPatient(patient, iDDesk);
+        try{
+        patient.sleep(10000);
+        }catch(Exception e){
+            //in case something goes wrong, still to implement
+        }
+        obsRoom.exitPatient(patient, iDDesk);
+        semEnterObs.release();
+        capacity.addAndGet(-1);
         /*
         entrar a la mesa sin paciente 
         esperar 10 segundos, mirar si hay comlpicaciones

@@ -25,9 +25,16 @@ public class Desk {
         this.iDWorker = -1;
     }
     
+    public void setPatient(int idPatient){
+        this.iDPatient = idPatient;
+    }
     
     public int getPatient(){
         return this.iDPatient;
+    }
+    
+    public void setWorker(int idWorker){
+        this.iDWorker = idWorker;
     }
     
     public int getWorker(){

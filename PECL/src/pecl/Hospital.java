@@ -9,7 +9,7 @@ public class Hospital {
     private final VaccRoom vaccRoom;
     private final ObservationRoom obsRoom;
     private final AtomicInteger capacity;
-    HashMap<Integer, Patient>  patients;
+    private HashMap<Integer, Patient>  patients;
     private Semaphore semEnterVacc = new Semaphore(10);
     private Semaphore semEnterObs = new Semaphore(20);
     private Semaphore semPatients = new Semaphore(1);

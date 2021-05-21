@@ -19,35 +19,52 @@ public class Reception {
     // cuando les atiendan... se van a entering Q... y cuando les den un notify o lo que usemos
     // que entre el primero...
     
-    public void enterWaitingQueue(Patient patient){
+    public synchronized void enterWaitingQueue(Patient patient){
         try{
             waitingSemaphore.acquire();
+            waitingQ.add(patient);
+            patient.wait();
         }catch(Exception e){}
-        waitingQ.add(patient);
-        waitingSemaphore.release();
+        finally
+        {
+            waitingSemaphore.release();
+        }
+        
         
     }
-    public void exitWaitingQueue(Patient patient){
+    public synchronized void exitWaitingQueue(Patient patient){
         try{
-            waitingSemaphore.acquire();      
+            waitingSemaphore.acquire();
+            patient.notify();
+            waitingQ.remove(patient);
         }catch(Exception e){}
-        waitingQ.remove(patient);
-        waitingSemaphore.release();
+        finally
+        {
+            waitingSemaphore.release();
+        }
     }
     
-    public void enterEnteringQueue(Patient patient){
+    public synchronized void enterEnteringQueue(Patient patient){
         try{
             enteringSemaphore.acquire();
+            enteringQ.add(patient);
+            patient.wait();
         }catch(Exception e){}
-        enteringQ.add(patient);
-        enteringSemaphore.release();
+        finally
+        {
+            waitingSemaphore.release();
+        }
     }
-    public void exitEnteringQueue(Patient patient){
+    public synchronized void exitEnteringQueue(Patient patient){
         try{
-            enteringSemaphore.acquire();      
+            enteringSemaphore.acquire();
+            patient.notify();
+            enteringQ.remove(patient);
         }catch(Exception e){}
-        enteringQ.remove(patient);
-        enteringSemaphore.release();
+        finally
+        {
+            waitingSemaphore.release();
+        }
     }
     
     public ArrayList<Patient> getEnteringQueue(){

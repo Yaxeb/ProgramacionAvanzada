@@ -98,6 +98,25 @@ public class Hospital {
         patient.sleep(10000);
         }catch(Exception e){
             //in case something goes wrong, still to implement
+            /*
+            todo esto dentro de un lock, o un semaforo...
+            miramos todas las mesas una a una, comprobando si hay algun worker
+            que no tenga paciente, en caso de que lo haya, se llama al worker 
+            para que venga a visitar al usuario con complicaciones.
+            
+            en caso de que todos esos workers estén trabajando y haya workers durmiendo
+            se despierta al primer worker durmiendo (posicion 0 del arraylist de gente descansando)
+            en ese momento, se activa un flag en hcareWorker que diga que esta activo en modo
+            especial, y tiene que obviar su comportamiento natural y dirigirse a la sala 
+            de observacion donde tenga que visitar al paciente con problemas, despues, se desactiva
+            el flag y se vuelve a descansar. 
+            
+            en caso de que todos los workers esten trabajando y no haya workers durmiendo,
+            se espera a que haya un worker que termine de vacunar, este comprobara de forma
+            natural siempre antes de que pueda pasar nadie a la mesa si existe un paciente con 
+            complicaciones, en caso afirmativo, se irá de la mesa y se dirigirá al observation room. 
+            
+            */
         }
         obsRoom.exitPatient(patient, iDDesk);
         semEnterObs.release();

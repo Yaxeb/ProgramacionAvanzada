@@ -46,6 +46,26 @@ public class HcareWorker extends Thread{
             }
         }
               
+        
+        synchronized (this)
+        {
+             while (iDDeskVacc == -1)
+             {
+                 for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
+                 {
+                     Desk desk = desksVaccRoom.get(i);
+                     if (desk.getWorker() != -1)
+                     {
+                         if (Math.random() > 0.5)
+                         {
+                             desk.setWorker(hid);
+                             desksVaccRoom.set(i, desk);
+                             iDDeskVacc = i;
+                          }
+                     }
+                 }
+             }
+         }
 //        while (hospital.getObsRoom().getButton() > 0) { // integer > 1
 //             
 //             // atomic integer... 
@@ -58,29 +78,27 @@ public class HcareWorker extends Thread{
 //        }
             
              // sitting the worker in a working post. 
-             synchronized (this) {
-                 while (iDDeskVacc == -1)
-                 {
-                     for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
-                     {
-                         Desk desk = desksVaccRoom.get(i);
-                         if (desk.getWorker() != -1)
-                         {
-                             if (Math.random() > 0.5)
-                             {
-                                 desk.setWorker(hid);
-                                 desksVaccRoom.set(i, desk);
-                                 iDDeskVacc = i;
-                              }
-                         }
-                     }
-                 }
-             }
+             
             
              // mientras no haya paciente, se duerme...
              // tocará hacer un lock y toda la movida...
              while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) {
                  condition.await(); // dormir
+                 /*
+                   crear un booleano que diga que hay alguien en la condicion de await
+                   esto nos permitirá crear un signal de forma segura
+                   en caso de que ese booleano no esté en true, no podremos hacer signal tampoco
+                   y nos tocará despertar a alguien quien esté durmiendo.
+                 */
+                 
+                 /*
+                    tiene que irse a dormir pase lo que pase, evita active waiting
+                    si le despiertan (puede despertarle con un signal tanto una persona
+                    del observation room o un paciente sentado en frente suyo que viene a 
+                    vacunarse). comprobamos si hay alguien sentado en frente suyo, y si no...
+                    se va a ayudar al observation room.
+                 */
+                 
              }
              // despierto y con paciente...          
              timeToVaccine = 3000 + (int) Math.random() * 2000;
@@ -91,7 +109,7 @@ public class HcareWorker extends Thread{
              
              if (counter % 15 == 0){
                 try {
-                    sleep(100);
+                    sleep(5000 + (int) Math.random() * 3000); 
                 }
                 catch (InterruptedException ex) 
                 {

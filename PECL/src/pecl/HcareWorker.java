@@ -1,32 +1,40 @@
 package pecl;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HcareWorker extends Thread{
     private int hid;
     private int pVaccinated;
-    private int iDDesk;
+    private int iDDeskVacc;
+    private int iDDeskObs;
+    private int timeToVaccine;
+    private int counter;
+    private final int maximum;
     private Hospital hospital; 
     private boolean beenAwaken;
-    public HcareWorker(int id, int pVaccinated, int vPost, Hospital hospital) {
+    
+
+    public HcareWorker(int id, int pVaccinated, Hospital hospital) {
         this.hid = id;
         this.pVaccinated = pVaccinated;
-        this.iDDesk = vPost;
         this.hospital = hospital;
         this.beenAwaken = false;
+        maximum = 15;
     }
     
     @Override
     public void run(){
-        ArrayList<> desks 
+        ArrayList<Desk> desksVaccRoom = hospital.getVaccRoom().getDesks();
+        ArrayList<Desk> desksObsRoom = hospital.getObsRoom().getDesks();
+        
         if (beenAwaken)
         {
             
-        } 
+        }
         else 
         {
-            
             try 
             {
                 //tomas descanso de 1-3 segundos
@@ -37,29 +45,65 @@ public class HcareWorker extends Thread{
                 Logger.getLogger(HcareWorker.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        while (hospital.getObsRoom().getButton() > 0) { // integer > 1
+              
+//        while (hospital.getObsRoom().getButton() > 0) { // integer > 1
+//             
+//             // atomic integer... 
+//             // deja su mesa libre... ( si estaba en una... )
+//             // ir a la obs room. (si no esta ahi ya... ) // se sienta en la desk respectiva
+//             hospital.getObsRoom().getButton().decrease(); // se le resta 1.... 
+//             
+//             //sincronizas con el paciente
+//             synchronizeloquesea();
+//        }
+            
+             // sitting the worker in a working post. 
+             synchronized (this) {
+                 while (iDDeskVacc == -1)
+                 {
+                     for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
+                     {
+                         Desk desk = desksVaccRoom.get(i);
+                         if (desk.getWorker() != -1)
+                         {
+                             if (Math.random() > 0.5)
+                             {
+                                 desk.setWorker(hid);
+                                 desksVaccRoom.set(i, desk);
+                                 iDDeskVacc = i;
+                              }
+                         }
+                     }
+                 }
+             }
+            
+             // mientras no haya paciente, se duerme...
+             // tocará hacer un lock y toda la movida...
+             while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) {
+                 condition.await(); // dormir
+             }
+             // despierto y con paciente...          
+             timeToVaccine = 3000 + (int) Math.random() * 2000;
+             int pid = desksVaccRoom.get(iDDeskVacc).getPatient();
+            
+             vaccinatePatient(hospital.getPatient(pid), this, timeToVaccine);
+             counter++;
              
-             // atomic integer... 
-             // deja su mesa libre... ( si estaba en una... )
-             // ir a la obs room. (si no esta ahi ya... ) // se sienta en la desk respectiva
-             hospital.getObsRoom().getButton().decrease(); // se le resta 1.... 
-             
-             //sincronizas con el paciente
-             synchronizeloquesea();
-        }
-        
-        
-        while (true) { // haya paciente
-            desks = hospital.getVaccRoom().getDesk();
-            if (hospital.getVaccRoom().getVaccines() > 0){
-                hospital.getVaccRoom().commentTime(2000); //vacunar tiempo...? 
-                // reducir el no de vacunas. 
-                Patient patient = getPatient(iDDesk);
-                synchronizeloquesea(); //
-            }
-        } // se duerme... 
-        
+             if (counter % 15 == 0){
+                try {
+                    sleep(100);
+                }
+                catch (InterruptedException ex) 
+                {
+                    // being required in the observation room.
+                    beenAwaken = true;
+                    
+                }
+             }
+            
+             // le tiene que hacer signal auxWorker de que alguien va...
+            // una clase extra para la comunicacion de ambas.      
+       
         /* cuando esten listos, van al desk disponible 
            (está disponible si no hay ni medico ni paciente dentro)
            cuando un paciente llegue al desk, esperan a que haya una vacuna
@@ -90,15 +134,19 @@ public class HcareWorker extends Thread{
         //}
         }
     
-       
-    public void vaccinatePatient(Patient p, int number){
-        
+    public void vaccinatePatient(Patient patient, HcareWorker hcWorker, int time){
+        patient.setTimeToVaccine(time);
+        hcWorker.setTimeToVaccine(time);
+    }
+    
+    public void setTimeToVaccine(int time){
+        this.timeToVaccine = time;
     }
     
     public void takeBreak(){
         
     }
-
+    
     public int getHId() {
         return hid;
     }
@@ -109,21 +157,6 @@ public class HcareWorker extends Thread{
 
     public void setpVaccinated(int pVaccinated) {
         this.pVaccinated = pVaccinated;
-    }
+    }  
 
-    public int getvPost() {
-        return iDDesk;
-    }
-
-    public void setvPost(int iDDesk) {
-        this.iDDesk = iDDesk;
-    }
-    
-    
-    public void syncronizeloquesea(Patient patient, HcareWorker hcWorker){
-        patient.sleep(200);
-        hcWorker.sleep(200);
-    }
-    
-    
 }

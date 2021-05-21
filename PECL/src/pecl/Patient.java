@@ -1,9 +1,13 @@
 package pecl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Patient extends Thread{
     private final int pid;
     private final int randomChance;
     private Hospital hospital;
+    private int timeToVaccine;
     
     public Patient(int pid, Hospital hospital) {
         this.pid = pid;
@@ -15,14 +19,25 @@ public class Patient extends Thread{
     public void run(){
         hospital.enterHospital(this);
         int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());
-        if ( iDDesk != 0) { // tendre que comprobarlo varias veces en bucle
-            // while hasta que obtenga obs desk. si no, esperar... o que le despierten...
-            
+        if ( iDDesk != 0) { // tengo que obtener el hcareworker que esté ahi 
             int obsDesk = hospital.enterVaccRoom(this, iDDesk);
-             
+            try 
+            {
+                sleep(timeToVaccine);
+            } 
+            catch (InterruptedException ex)
+            {
+                Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             hospital.enterObservationRoom(this, obsDesk);
         }
     }
+    
+    public void setTimeToVaccine(int time){
+        this.timeToVaccine = time;
+    }
+    
     
     public int getPid() {
         return pid;
@@ -35,4 +50,5 @@ public class Patient extends Thread{
     public boolean hasAppointment(){
         return randomChance == 0;
     }
+    
 }

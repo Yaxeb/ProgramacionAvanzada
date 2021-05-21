@@ -67,5 +67,10 @@ public class ObservationRoom {
             desksLock.unlock();
         }
         return i;
-    }    
+    }
+
+    public ArrayList<Desk> getDesks(){
+        return this.desks;
+    }
+    
 }

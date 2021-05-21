@@ -11,14 +11,14 @@ public class Desk {
         this.iDWorker = -1;
     }
     
-    /*
+    /**
      * When the ID is -1, it means that no thread is occupying it
      */
     public void leavePatient(){
         this.iDPatient = -1;
     }
     
-    /*
+    /**
      * When the ID is -1, it means that no thread is occupying it
      */
     public void leaveWorker(){

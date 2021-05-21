@@ -14,8 +14,8 @@ public class Patient extends Thread{
     @Override
     public void run(){
         hospital.enterHospital(this);
-        int iDDesk = hospital.enterReception(this, hospital.get);
-        if ( iDDesk != 0) {
+        int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());
+        if ( iDDesk != 0) { // tendre que comprobarlo varias veces en bucle
             int obsDesk = hospital.enterVaccRoom(this, iDDesk);
             hospital.enterObservationRoom(this, obsDesk);
         } 

@@ -8,7 +8,7 @@ public class Reception {
     // listas para imprimirlos...
 
     private final ArrayList<Patient> waitingQ = new ArrayList(); 
-    private final AuxWorker auxWorker1 = new AuxWorker(1, 10);
+    private AuxWorker auxWorker1;
     private final ArrayList<Patient> enteringQ = new ArrayList();
     private Semaphore waitingSemaphore = new Semaphore(1);
     private Semaphore enteringSemaphore = new Semaphore(1);
@@ -50,4 +50,19 @@ public class Reception {
         enteringSemaphore.release();
     }
     
+    public ArrayList<Patient> getEnteringQueue(){
+        return this.enteringQ;
+    }
+    
+    public ArrayList<Patient> getWaitingQueue(){
+        return this.waitingQ;
+    }
+    
+    public AuxWorker getAuxWorker(){
+        return this.auxWorker1;
+    }
+    
+    public void setAuxWorker(AuxWorker auxWorker1){
+        this.auxWorker1 = auxWorker1;
+    }
 }

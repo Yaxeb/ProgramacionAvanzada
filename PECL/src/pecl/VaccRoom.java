@@ -51,15 +51,25 @@ public class VaccRoom {
         }
     }
     
+    /// returns the number of available vaccines
     public int getVaccines(){
         return vaccines.get();
     }
     
+    /// Increments the number of vaccines in 1.
     public void createVaccine(){
         vaccines.set(vaccines.addAndGet(1));
     }
-
     
+    /// Reduces the number of vaccines in 1.
+    public void takeVaccine(){
+        vaccines.set(vaccines.decrementAndGet());
+    }
+    
+    /// returns all the desks from the Vaccination Room
+    public ArrayList<Desk> getDesks(){
+        return this.desks;
+    }
     
     
     

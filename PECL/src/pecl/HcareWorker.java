@@ -1,24 +1,52 @@
 package pecl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class HcareWorker extends Thread{
     private int hid;
     private int pVaccinated;
     private int iDDesk;
     private Hospital hospital; 
-    
-    public HcareWorker(int id, int pVaccinated, int vPost) {
+    private boolean beenAwaken;
+    public HcareWorker(int id, int pVaccinated, int vPost, Hospital hospital) {
         this.hid = id;
         this.pVaccinated = pVaccinated;
         this.iDDesk = vPost;
+        this.hospital = hospital;
+        this.beenAwaken = false;
     }
     
     @Override
     public void run(){
-        si (meHanDespertado){
+        ArrayList<> desks 
+        if (beenAwaken)
+        {
             
-        } else {
+        } 
+        else 
+        {
+            try 
+            {
                 //tomas descanso de 1-3 segundos
+                sleep(1000 + (int) (Math.random() * 2001));
+            } 
+            catch (InterruptedException ex) 
+            {
+                Logger.getLogger(HcareWorker.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        while (true) { // no haya llegado paciente
+            desks = hospital.getVaccRoom().getDesk();
+            if (hospital.getVaccRoom().getVaccines() > 0){
+                hospital.getVaccRoom().commentTime(2000); //vacunar tiempo...? 
+                // reducir el no de vacunas. 
+                Patient patient = getPatient(iDDesk);
+            }
+            
+             
+        }
+        
         /* cuando esten listos, van al desk disponible 
            (está disponible si no hay ni medico ni paciente dentro)
            cuando un paciente llegue al desk, esperan a que haya una vacuna

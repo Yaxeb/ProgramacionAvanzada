@@ -109,4 +109,15 @@ public class Hospital {
         */
     }
     
+    public VaccRoom getVaccRoom(){
+        return this.vaccRoom;
+    }
+    
+    public Reception getReception(){
+        return this.reception;
+    }
+    
+    public ObservationRoom getObsRoom(){
+        return this.obsRoom;
+    }
 }

@@ -18,7 +18,10 @@ public class Reception {
     
     // cuando les atiendan... se van a entering Q... y cuando les den un notify o lo que usemos
     // que entre el primero...
-    
+    /**
+     * 
+     * @param patient 
+     */
     public synchronized void enterWaitingQueue(Patient patient){
         try{
             waitingSemaphore.acquire();
@@ -68,11 +71,29 @@ public class Reception {
     }
     
     public ArrayList<Patient> getEnteringQueue(){
-        return this.enteringQ;
+        ArrayList<Patient> eQueue = new ArrayList<>();
+        try{
+            waitingSemaphore.acquire();
+            eQueue = this.enteringQ;
+        }catch(Exception e){}
+        finally
+        {
+            waitingSemaphore.release();
+        }
+        return eQueue;
     }
     
     public ArrayList<Patient> getWaitingQueue(){
-        return this.waitingQ;
+        ArrayList<Patient> wQueue = new ArrayList<>();
+        try{
+            waitingSemaphore.acquire();
+            wQueue = this.waitingQ;
+        }catch(Exception e){}
+        finally
+        {
+            waitingSemaphore.release();
+        }
+        return wQueue;
     }
     
     public AuxWorker getAuxWorker(){

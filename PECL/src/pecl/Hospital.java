@@ -1,6 +1,6 @@
 package pecl;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,7 +9,7 @@ public class Hospital {
     private final VaccRoom vaccRoom;
     private final ObservationRoom obsRoom;
     private final AtomicInteger capacity;
-    ArrayList<Patient>  patients= new ArrayList();
+    HashMap<Integer, Patient>  patients;
     private Semaphore semEnterVacc = new Semaphore(10);
     private Semaphore semEnterObs = new Semaphore(20);
     private Semaphore semPatients = new Semaphore(1);
@@ -19,6 +19,7 @@ public class Hospital {
         this.reception = reception;
         this.vaccRoom = vaccRoom;
         this.obsRoom = obsRoom;
+        this.patients = new HashMap<>();
     }
     
     public void enterHospital(Patient patient){
@@ -133,7 +134,7 @@ public class Hospital {
         {
             semPatients.acquire();
         }catch(Exception e){}
-        patients.add(patient);
+        patients.put(patient.getPid(), patient);
         semPatients.release();
     }
     public void removePatient(Patient patient){
@@ -141,7 +142,16 @@ public class Hospital {
         {
             semPatients.acquire();
         }catch(Exception e){}
-        patients.remove(patient);
+        patients.remove(patient.getPid());
         semPatients.release();
+    }
+    public Patient getPatient(int patientID){
+        try
+        {
+            semPatients.acquire();
+        }catch(Exception e){}
+        Patient patient = patients.get(patientID);
+        semPatients.release();
+        return patient;
     }
 }

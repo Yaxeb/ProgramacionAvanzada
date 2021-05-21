@@ -1,5 +1,6 @@
 package pecl;
 
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -8,8 +9,10 @@ public class Hospital {
     private final VaccRoom vaccRoom;
     private final ObservationRoom obsRoom;
     private final AtomicInteger capacity;
+    ArrayList<Patient>  patients= new ArrayList();
     private Semaphore semEnterVacc = new Semaphore(10);
     private Semaphore semEnterObs = new Semaphore(20);
+    private Semaphore semPatients = new Semaphore(1);
     
     public Hospital(Reception reception, VaccRoom vaccRoom, ObservationRoom obsRoom) {
         this.capacity = new AtomicInteger();
@@ -20,6 +23,7 @@ public class Hospital {
     
     public void enterHospital(Patient patient){
         capacity.set(capacity.addAndGet(1));
+        addPatient(patient);
         reception.enterWaitingQueue(patient);
         // queda hacer las comprobaciones y mandarle a dormir        
         // quitarlo de la lista? 
@@ -44,7 +48,9 @@ public class Hospital {
             return vacDesk;                      // the id of its desk is returned
         }else{
             reception.exitWaitingQueue(patient); //the patient didn't have an appointment
-            return 0;                           // so it leaves the hospital
+            removePatient(patient);              // so it leaves the hospital
+            return 0;                           
+            
         }
         /*
         hablar con el asistente y mirar si está en lista...
@@ -95,6 +101,7 @@ public class Hospital {
         obsRoom.exitPatient(patient, iDDesk);
         semEnterObs.release();
         capacity.addAndGet(-1);
+        removePatient(patient);
         /*
         entrar a la mesa sin paciente 
         esperar 10 segundos, mirar si hay comlpicaciones
@@ -119,5 +126,22 @@ public class Hospital {
     
     public ObservationRoom getObsRoom(){
         return this.obsRoom;
+    }
+    
+    public void addPatient(Patient patient){
+        try
+        {
+            semPatients.acquire();
+        }catch(Exception e){}
+        patients.add(patient);
+        semPatients.release();
+    }
+    public void removePatient(Patient patient){
+        try
+        {
+            semPatients.acquire();
+        }catch(Exception e){}
+        patients.remove(patient);
+        semPatients.release();
     }
 }

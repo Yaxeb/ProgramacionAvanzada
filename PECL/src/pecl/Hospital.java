@@ -1,5 +1,6 @@
 package pecl;
 
+import hospitalInterface.MainWindow;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
@@ -19,7 +20,9 @@ public class Hospital {
     private Semaphore semEnterObs = new Semaphore(20);
     private Semaphore semPatients = new Semaphore(1);
     private Semaphore semException = new Semaphore(1);
-    public Hospital(Reception reception, VaccRoom vaccRoom, ObservationRoom obsRoom) {
+    private MainWindow window;
+    
+    public Hospital(Reception reception, VaccRoom vaccRoom, ObservationRoom obsRoom, MainWindow window) {
         this.capacity = new AtomicInteger();
         this.reception = reception;
         this.vaccRoom = vaccRoom;
@@ -27,6 +30,7 @@ public class Hospital {
         this.patients = new HashMap<>();
         this.hcareWorkers = new HashMap<>(); 
         this.restRoom = new ArrayList<>();
+        this.window = window;
     }
     
     public void enterHospital(Patient patient){

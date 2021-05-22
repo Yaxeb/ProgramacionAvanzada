@@ -17,7 +17,8 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
-        Hospital hospital= new Hospital(new Reception(hospital), new VaccRoom(hospital), new ObservationRoom(hospital),this);
+        Hospital hospital = null;
+        hospital = new Hospital(new Reception(hospital), new VaccRoom(hospital), new ObservationRoom(hospital),this);
         AuxWorker a1 = new AuxWorker(1,10,hospital);
         hospital.getReception().setAuxWorker(a1);
         a1.start();
@@ -867,12 +868,9 @@ public class MainWindow extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        Hospital hospital = new Hospital(null,null,null);//las cosas que le hacen falta
-        Patient patient = new Patient(2,null);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainWindow().setVisible(true);
-                patient.start();
             }
         });
     }

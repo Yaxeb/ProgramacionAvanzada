@@ -6,17 +6,24 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ObservationRoom {
-    ArrayList<Desk> desks = new ArrayList(20);
+    ArrayList<Desk> desks;
     private Hospital hospital; 
-    private Lock desksLock = new ReentrantLock();
-    private Condition availableDesk = desksLock.newCondition();
+    private Lock desksLock;
+    private Condition availableDesk;
+    
     /**
      * This method initializes the object
      * @param hospital The hospital this room belongs to
      */
     public ObservationRoom(Hospital hospital){
+        desks = new ArrayList(20); 
+        this.desksLock = new ReentrantLock();
+        this.availableDesk = desksLock.newCondition();
         this.hospital = hospital;
+        
+        
     }
+    
     /**
      * This method locates a patient into the desk with the ID given
      * It uses a lock to avoid data corruption and race conditions when
@@ -35,6 +42,7 @@ public class ObservationRoom {
             desksLock.unlock();
         }
     }
+    
     /**
      * This method prepares a patient to leave the observation room
      * It uses a lock to avoid data corruption and race conditions when
@@ -58,7 +66,8 @@ public class ObservationRoom {
             desksLock.unlock();
         }
         
-    }    
+    }   
+    
     /**
      * This method looks at all the desks sequentially, and, in case there is an
      * available one, it returns its ID.
@@ -135,5 +144,4 @@ public class ObservationRoom {
     public ArrayList<Desk> getDesks(){
         return this.desks;
     }
-    
 }

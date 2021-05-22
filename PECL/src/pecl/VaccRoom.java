@@ -8,20 +8,26 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class VaccRoom {
-    private final AtomicInteger vaccines = new AtomicInteger(); 
-    private final ArrayList<Desk> desks = new ArrayList(10);
+    private final AtomicInteger vaccines; 
+    private final ArrayList<Desk> desks;
     private AuxWorker aWorker;
-    private Semaphore desksSemaphore = new Semaphore(1);
-    private Lock desksLock = new ReentrantLock();
-    private Condition availableDesk = desksLock.newCondition();
+    private Lock desksLock;
+    private Condition availableDesk;
     private Hospital hospital;
+    
     /**
      * This method initializes the object
      * @param hospital The hospital this room belongs to
      */
     public VaccRoom(Hospital hospital) {
+        
+        this.vaccines = new AtomicInteger();
+        this.desks = new ArrayList(10);
         this.hospital = hospital;
+        this.desksLock = new ReentrantLock();
+        this.availableDesk = desksLock.newCondition();
     }
+    
     /**
      * This method locates a patient into the desk with the ID given
      * It uses a lock to avoid data corruption and race conditions when
@@ -40,6 +46,7 @@ public class VaccRoom {
             desksLock.unlock();
         }
     }
+    
     /**
      * This method prepares a patient to leave the observation room
      * It uses a lock to avoid data corruption and race conditions when
@@ -63,6 +70,7 @@ public class VaccRoom {
             desksLock.unlock();
         }
     }
+    
     /**
      * This method looks at all the desks sequentially, and, in case there is an
      * available one, it returns its ID.

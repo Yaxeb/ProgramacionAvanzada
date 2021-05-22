@@ -7,11 +7,20 @@ import java.util.concurrent.Semaphore;
 public class Reception {
     // listas para imprimirlos...
 
-    private final ArrayList<Patient> waitingQ = new ArrayList(); 
+    private final ArrayList<Patient> waitingQ; 
     private AuxWorker auxWorker1;
-    private final ArrayList<Patient> enteringQ = new ArrayList();
-    private Semaphore waitingSemaphore = new Semaphore(1);
-    private Semaphore enteringSemaphore = new Semaphore(1);
+    private final ArrayList<Patient> enteringQ;
+    private Semaphore waitingSemaphore;
+    private Semaphore enteringSemaphore;
+    private Hospital hospital;
+    
+    public Reception(Hospital hospital){
+        this.waitingQ = new ArrayList();
+        this.enteringQ = new ArrayList();
+        this.waitingSemaphore = new Semaphore(1);
+        this.enteringSemaphore = new Semaphore(1);
+        this.hospital = hospital;    
+    }
     
     // while not atendidos.... que se vayan a dormir... 
     // semaforos... 

@@ -13,15 +13,21 @@ public class HcareWorker extends Thread{
     private int iDDeskVacc;
     private int iDDeskObs;
     private int timeToVaccine;
+    private int timeToRest;
     private int counter;
     private final int maximum;
-    private Hospital hospital; 
     private boolean beenAwaken;
-    private Lock lock; 
-    private Condition noWorkToDo; 
     private boolean working;
+    private Lock lock;
+    private Condition noWorkToDo;
+    private Hospital hospital;
     
-
+    /**
+     * Constructor of the HcareWorker
+     * @param id
+     * @param pVaccinated
+     * @param hospital
+     */
     public HcareWorker(int id, int pVaccinated, Hospital hospital) {
         this.hid = id;
         this.pVaccinated = pVaccinated;
@@ -36,29 +42,48 @@ public class HcareWorker extends Thread{
     @Override
     public void run(){
         ArrayList<Desk> desksVaccRoom;
-        ArrayList<Desk> desksObsRoom;     
+        ArrayList<Desk> desksObsRoom;
+        int timeWithComplications;
         if (beenAwaken)
         {
             // ve a la obs room, que te han despertado para eso. 
             // hace la sincronizacion con el/los usuario/s, y se va a dormir de nuevo. 
+            lock.lock();
+            desksObsRoom = hospital.getObsRoom().getDesks();
+            iDDeskObs = hospital.getObsRoom().checkComplications().get(0);
+            desksObsRoom.get(iDDeskObs).setWorker(hid);
+            int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
+            timeWithComplications = 2000 + (int) Math.random() * 3001;
+            hospital.getPatient(idPatient).setTimeWithComplications(timeWithComplications);
+            try {
+                sleep(timeWithComplications);
+            }
+            catch (InterruptedException ex) 
+            {
+                System.out.println("Interrupted while helping the patient with complications #1");
+            }
+            finally
+            {
+                lock.unlock();
+            }
+            
         }
         else 
         {
             try 
             {
-                //tomas descanso de 1-3 segundos
+                //starting the schedule. 
                 sleep(1000 + (int) (Math.random() * 2001));
             } 
-            catch (InterruptedException ex) 
-            {
-                Logger.getLogger(HcareWorker.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            // impossible to happen since HcareWorkers are created first
+            catch (InterruptedException ex) {} 
         }
-              
+        
         try {
-            lock.lock();
-            desksVaccRoom = hospital.getVaccRoom().getDesks();
-
+             lock.lock();
+             desksVaccRoom = hospital.getVaccRoom().getDesks();
+             
+             // sitting in a post. 
              while (iDDeskVacc == -1)
              {
                  for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
@@ -89,88 +114,60 @@ public class HcareWorker extends Thread{
              vaccinatePatient(hospital.getPatient(pid), this, timeToVaccine);
              counter++;
              
-             if (counter % 15 == 0)
+             if (counter % maximum == 0)
              {
                  try 
                  {
-                      sleep(5000 + (int) Math.random() * 3000); 
+                      hospital.getRestRoom().add(this);
+                      timeToRest = 5000 + (int) Math.random() * 3000;
+                      sleep(timeToRest); 
                  }
                  catch (InterruptedException ex) 
                  {
-                    // awaken while vaccinating. (unlikely to happen)
-                    System.out.println("Been awaken while vaccinating. ");
+                     // awaken while taking a break.
+                     beenAwaken = true;
+                     this.start();
+                     System.out.println("Awaken while having a break...");
                  }
              }
              
-             // checking if any patient is requesting help due to complications
-             while (!hospital.getObsRoom().checkComplications().isEmpty()) {
-                 // mirar los locks por ahi...
-                 desksObsRoom = hospital.getObsRoom().getDesks();
-                 desksVaccRoom = hospital.getVaccRoom().getDesks();
-                 iDDeskObs = hospital.getObsRoom().checkComplications().get(0);
-                 
-                 desksVaccRoom.get(iDDeskVacc).setWorker(-1);
-                 desksObsRoom.get(iDDeskObs).setWorker(hid);
-                 hospital.getObsRoom().checkComplications().remove(0);
-                 
-                 int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
-                 int timeWithComplications = 2000 + (int) Math.random() * 3001;
-                 hospital.getPatient(idPatient).setTimeWithComplications(timeWithComplications);
-                 // treating the patient. 
-                 sleep(timeWithComplications);
-             }
-                                      
         }
         catch (InterruptedException ex) 
         {
-             // no work to do but been interrupted because the worker is needed 
-             beenAwaken = true;
-             this.start();
+             // interrupted exception in case that it got 
+            System.out.println("Interrupted while on condition of not working. ");
         }
         finally
         {
             lock.unlock();
         }
-        
-            /*
-               tiene que irse a dormir pase lo que pase, evita active waiting
-               si le despiertan (puede despertarle con un signal tanto una persona
-               del observation room o un paciente sentado en frente suyo que viene a 
-               vacunarse). comprobamos si hay alguien sentado en frente suyo, y si no...
-               se va a ayudar al observation room.
-            */
+             // checking if any patient is requesting help due to complications
+             while (!hospital.getObsRoom().checkComplications().isEmpty()) {
+                 lock.lock();
+                 desksObsRoom = hospital.getObsRoom().getDesks();
+                 desksVaccRoom = hospital.getVaccRoom().getDesks();
+                 iDDeskObs = hospital.getObsRoom().checkComplications().get(0);
+                 iDDeskVacc = -1;
+                 desksVaccRoom.get(iDDeskVacc).setWorker(-1);
+                 desksObsRoom.get(iDDeskObs).setWorker(hid);
+                 hospital.getObsRoom().checkComplications().remove(0);
                  
-             // le tiene que hacer signal auxWorker de que alguien va...
-            // una clase extra para la comunicacion de ambas.      
-         
-        /* cuando esten listos, van al desk disponible 
-           (está disponible si no hay ni medico ni paciente dentro)
-           cuando un paciente llegue al desk, esperan a que haya una vacuna
-           cuando está la vacuna, sincronizan con el paciente 
-           para determinar el tiempo de 3-5s 
-           si el paciente se va, comunican que el sitio está disponible 
-           (arrayList sincronizada) y esperan a que venga un paciente. 
-           cuando vacunen a 15 pacientes se toman un descanso de 5-8s
-           y se dirigen a la sala de descanso.
-           los worker podrán ser despertados en caso de que un paciente
-           tenga complicaciones y no haya ningun médico trabajando disponible 
-           (que no esten poniendo vacunas) 
-           (recorremos todas las mesas y miramos que no tengan paciente y tengan worker)
-           en caso negativo, se despierta y acude al sitio de la complicacion, se sincronizan
-           con el paciente de cuanto tiempo van a descansar, se vuelve a su descanso completo. 
-        */
-        //wait(){
-
-        
-        //} catch InterruptedException(){
-            /* observation room tendrá otra lista que sea de urgencia, leyendo esa lista 
-               y contrastandola con la lista de mesas (para ver si tiene un medico o no)
-               se determinará a qué puesto tiene que dirigirse el médico despertado. 
-               ahí se sincroniza con el paciente, para esperar 2-5s y se vuelve a su descanso de nuevo.
-               meHanDesperato = true
-            */ 
-        //    this.start();
-        //}
+                 int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
+                 timeWithComplications = 2000 + (int) Math.random() * 3001;
+                 hospital.getPatient(idPatient).setTimeWithComplications(timeWithComplications);
+                 lock.unlock();
+                 
+                 try 
+                 {
+                     // treating the patient.
+                     sleep(timeWithComplications);
+                 }
+                 catch (InterruptedException ex) 
+                 {
+                     System.out.println("Interrupted while helping the patient with complications #2");
+                     Logger.getLogger(HcareWorker.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+             }
         }
     
     /**
@@ -178,7 +175,6 @@ public class HcareWorker extends Thread{
      * 
      */
     public synchronized void signalNoWorkToDo(){
-        
         noWorkToDo.signal(); // puede dar illegal monitor exception, ver si sucede o no.
     }
     

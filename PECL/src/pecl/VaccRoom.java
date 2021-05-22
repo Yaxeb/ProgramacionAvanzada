@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class VaccRoom {
     private final AtomicInteger vaccines = new AtomicInteger(); 
     private final ArrayList<Desk> desks = new ArrayList(10);
+    private AuxWorker aWorker;
     private Semaphore desksSemaphore = new Semaphore(1);
     private Lock desksLock = new ReentrantLock();
     private Condition availableDesk = desksLock.newCondition();
@@ -147,6 +148,14 @@ public class VaccRoom {
             desksLock.unlock();
         }
         return d;
+    }
+
+    public AuxWorker getAuxWorker() {
+        return aWorker;
+    }
+
+    public void setAuxWorker(AuxWorker aWorker) {
+        this.aWorker = aWorker;
     }
     
     

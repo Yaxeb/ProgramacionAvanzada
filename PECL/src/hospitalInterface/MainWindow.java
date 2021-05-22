@@ -850,11 +850,12 @@ public class MainWindow extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        Hospital hospital = new Hospital(null,null,null);
+        Hospital hospital = new Hospital(null,null,null);//las cosas que le hacen falta
+        Patient patient = new Patient(2,null);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainWindow().setVisible(true);
-                
+                patient.start();
             }
         });
     }

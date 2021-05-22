@@ -11,13 +11,20 @@ import java.util.ArrayList;
  *
  * @author Oqueo
  */
-public class StringManager {
+public class StringManager extends Thread{
     Hospital hospital;
     MainWindow window;
 
     public StringManager(Hospital hospital, MainWindow window) {
         this.hospital = hospital;
         this.window = window;
+    }
+    
+    @Override
+    public void run(){
+        while(true){
+            textSetter();
+        }
     }
     
     public void textSetter(){

@@ -10,6 +10,7 @@ public class Patient extends Thread{
     private int timeToGetDesk;
     private int timeToVaccine;
     private int timeWithComplications;
+    private CustomLogger clogger;
     
     /**
      * Method constructor for Patient

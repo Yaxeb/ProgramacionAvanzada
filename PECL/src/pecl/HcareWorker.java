@@ -19,6 +19,7 @@ public class HcareWorker extends Thread{
     private boolean beenAwaken;
     private Lock lock; 
     private Condition noWorkToDo; 
+    private boolean working;
     
 
     public HcareWorker(int id, int pVaccinated, Hospital hospital) {
@@ -29,6 +30,7 @@ public class HcareWorker extends Thread{
         this.maximum = 15;
         this.lock = new ReentrantLock();
         this.noWorkToDo = lock.newCondition();
+        this.working = false;
     }
     
     @Override
@@ -37,7 +39,8 @@ public class HcareWorker extends Thread{
         ArrayList<Desk> desksObsRoom;     
         if (beenAwaken)
         {
-            
+            // ve a la obs room, que te han despertado para eso. 
+            // hace la sincronizacion con el/los usuario/s, y se va a dormir de nuevo. 
         }
         else 
         {
@@ -52,95 +55,94 @@ public class HcareWorker extends Thread{
             }
         }
               
-        
-        
-        
         try {
             lock.lock();
             desksVaccRoom = hospital.getVaccRoom().getDesks();
-            desksObsRoom = hospital.getObsRoom().getDesks();        
-            
-            while (iDDeskVacc == -1)
-            {
-                for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
-                {
-                    Desk desk = desksVaccRoom.get(i);
-                    if (desk.getWorker() != -1)
-                    {
-                        if (Math.random() > 0.5)
-                        {
-                            desk.setWorker(hid);
-                            desksVaccRoom.set(i, desk);
-                            iDDeskVacc = i;
-                         }
-                    }
-                }
-            }
+
+             while (iDDeskVacc == -1)
+             {
+                 for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
+                 {
+                     Desk desk = desksVaccRoom.get(i);
+                     if (desk.getWorker() != -1)
+                     {
+                          if (Math.random() > 0.5)
+                          {
+                              desk.setWorker(hid);
+                              desksVaccRoom.set(i, desk);
+                              iDDeskVacc = i;
+                          }
+                     }
+                 }
+             }
             
              while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) 
              {
-                noWorkToDo.await();
+                 working = false;
+                 noWorkToDo.await();
              }
 
-        } 
-        catch (InterruptedException ex) 
-        {
-            // no work to do but been interrupted because the worker is needed 
-             beenAwaken = true;
-             Logger.getLogger(HcareWorker.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        // despierto y con paciente...          
+             // Worker has work to do (vaccinate patient). 
+             working = true;
              timeToVaccine = 3000 + (int) Math.random() * 2000;
              int pid = desksVaccRoom.get(iDDeskVacc).getPatient();
-            
              vaccinatePatient(hospital.getPatient(pid), this, timeToVaccine);
              counter++;
              
-             if (counter % 15 == 0){
-                try {
-                    sleep(5000 + (int) Math.random() * 3000); 
-                }
-                catch (InterruptedException ex) 
-                {
+             if (counter % 15 == 0)
+             {
+                 try 
+                 {
+                      sleep(5000 + (int) Math.random() * 3000); 
+                 }
+                 catch (InterruptedException ex) 
+                 {
                     // awaken while vaccinating. (unlikely to happen)
-                    
-                }
+                    System.out.println("Been awaken while vaccinating. ");
+                 }
              }
+             
+             // checking if any patient is requesting help due to complications
+             while (!hospital.getObsRoom().checkComplications().isEmpty()) {
+                 // mirar los locks por ahi...
+                 desksObsRoom = hospital.getObsRoom().getDesks();
+                 desksVaccRoom = hospital.getVaccRoom().getDesks();
+                 iDDeskObs = hospital.getObsRoom().checkComplications().get(0);
+                 
+                 desksVaccRoom.get(iDDeskVacc).setWorker(-1);
+                 desksObsRoom.get(iDDeskObs).setWorker(hid);
+                 hospital.getObsRoom().checkComplications().remove(0);
+                 
+                 int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
+                 int timeWithComplications = 2000 + (int) Math.random() * 3001;
+                 hospital.getPatient(idPatient).setTimeWithComplications(timeWithComplications);
+                 // treating the patient. 
+                 sleep(timeWithComplications);
+             }
+                                      
+        }
+        catch (InterruptedException ex) 
+        {
+             // no work to do but been interrupted because the worker is needed 
+             beenAwaken = true;
+             this.start();
+        }
+        finally
+        {
+            lock.unlock();
+        }
         
-    
-//        while (hospital.getObsRoom().getButton() > 0) { // integer > 1
-//             
-//             // atomic integer... 
-//             // deja su mesa libre... ( si estaba en una... )
-//             // ir a la obs room. (si no esta ahi ya... ) // se sienta en la desk respectiva
-//             hospital.getObsRoom().getButton().decrease(); // se le resta 1.... 
-//             
-//             //sincronizas con el paciente
-//             synchronizeloquesea();
-//        }
-
-                /*
-                   crear un booleano que diga que hay alguien en la condicion de await
-                   esto nos permitirá crear un signal de forma segura
-                   en caso de que ese booleano no esté en true, no podremos hacer signal tampoco
-                   y nos tocará despertar a alguien quien esté durmiendo.
-                 */
+            /*
+               tiene que irse a dormir pase lo que pase, evita active waiting
+               si le despiertan (puede despertarle con un signal tanto una persona
+               del observation room o un paciente sentado en frente suyo que viene a 
+               vacunarse). comprobamos si hay alguien sentado en frente suyo, y si no...
+               se va a ayudar al observation room.
+            */
                  
-                 /*
-                    tiene que irse a dormir pase lo que pase, evita active waiting
-                    si le despiertan (puede despertarle con un signal tanto una persona
-                    del observation room o un paciente sentado en frente suyo que viene a 
-                    vacunarse). comprobamos si hay alguien sentado en frente suyo, y si no...
-                    se va a ayudar al observation room.
-                 */
-                 
-             
-             
-            
              // le tiene que hacer signal auxWorker de que alguien va...
             // una clase extra para la comunicacion de ambas.      
-       
+         
         /* cuando esten listos, van al desk disponible 
            (está disponible si no hay ni medico ni paciente dentro)
            cuando un paciente llegue al desk, esperan a que haya una vacuna
@@ -171,10 +173,26 @@ public class HcareWorker extends Thread{
         //}
         }
     
+    /**
+     * Method which signalls if the HcareWorker has work to do.
+     * 
+     */
+    public synchronized void signalNoWorkToDo(){
+        
+        noWorkToDo.signal(); // puede dar illegal monitor exception, ver si sucede o no.
+    }
+    
+    
+    
     public void vaccinatePatient(Patient patient, HcareWorker hcWorker, int time){
         patient.setTimeToVaccine(time);
         hcWorker.setTimeToVaccine(time);
     }
+    
+    public boolean isWorking(){
+        return this.isWorking();
+    }
+    
     
     public void setTimeToVaccine(int time){
         this.timeToVaccine = time;

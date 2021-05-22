@@ -4,18 +4,21 @@
  * and open the template in the editor.
  */
 package hospitalInterface;
+import java.util.ArrayList;
+import pecl.*;
 
 /**
  *
  * @author Oqueo
  */
 public class MainWindow extends javax.swing.JFrame {
-
+    private static Hospital hospital;
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
+        
     }
 
     /**
@@ -70,9 +73,9 @@ public class MainWindow extends javax.swing.JFrame {
         VDeskLabel10 = new javax.swing.JLabel();
         VDeskPane10 = new javax.swing.JScrollPane();
         VDesk10 = new javax.swing.JTextArea();
-        VPatientLabel = new javax.swing.JLabel();
-        VPatientPane = new javax.swing.JScrollPane();
-        VPatientText = new javax.swing.JTextArea();
+        VVaccinesLabel = new javax.swing.JLabel();
+        VVaccinesPane = new javax.swing.JScrollPane();
+        VVaccinesText = new javax.swing.JTextArea();
         VAuxiliaryLabel = new javax.swing.JLabel();
         VAuxiliaryPane = new javax.swing.JScrollPane();
         VAuxiliaryText = new javax.swing.JTextArea();
@@ -296,16 +299,16 @@ public class MainWindow extends javax.swing.JFrame {
         VDesk10.setRows(5);
         VDeskPane10.setViewportView(VDesk10);
 
-        VPatientLabel.setText("Patient");
+        VVaccinesLabel.setText("Available Vaccines");
 
-        VPatientPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        VPatientPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        VPatientPane.setPreferredSize(new java.awt.Dimension(70, 30));
+        VVaccinesPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        VVaccinesPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        VVaccinesPane.setPreferredSize(new java.awt.Dimension(70, 30));
 
-        VPatientText.setEditable(false);
-        VPatientText.setColumns(20);
-        VPatientText.setRows(5);
-        VPatientPane.setViewportView(VPatientText);
+        VVaccinesText.setEditable(false);
+        VVaccinesText.setColumns(20);
+        VVaccinesText.setRows(5);
+        VVaccinesPane.setViewportView(VVaccinesText);
 
         VAuxiliaryLabel.setText("Auxiliary");
 
@@ -659,8 +662,8 @@ public class MainWindow extends javax.swing.JFrame {
                                                 .addComponent(VDeskPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(VPatientLabel)
-                                                    .addComponent(VPatientPane, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                    .addComponent(VVaccinesLabel)
+                                                    .addComponent(VVaccinesPane, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(VDeskPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -728,9 +731,9 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(VDeskPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(VDeskPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(VPatientLabel)
+                                .addComponent(VVaccinesLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(VPatientPane, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(VVaccinesPane, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -849,11 +852,25 @@ public class MainWindow extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        Hospital hospital = new Hospital(null,null,null);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                updateWindow(hospital);
                 new MainWindow().setVisible(true);
+                for(int i = 0;i<vDesks.size();i++){
+                    vDesks.get(i).setText(hospital.getVaccRoom().getDesks().get(i).toString());
+                }
+                for(int i = 0;i<oDesks.size();i++){
+                    oDesks.get(i).setText(hospital.getObsRoom().getDesks().get(i).toString());
+                }
+                VVaccinesText.setText(""+ hospital.getVaccRoom().getVaccines());
+                
             }
         });
+    }
+   
+    public void updateWindow(Hospital hospital){
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -963,9 +980,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane VDeskPane7;
     private javax.swing.JScrollPane VDeskPane8;
     private javax.swing.JScrollPane VDeskPane9;
-    private javax.swing.JLabel VPatientLabel;
-    private javax.swing.JScrollPane VPatientPane;
-    private javax.swing.JTextArea VPatientText;
+    private javax.swing.JLabel VVaccinesLabel;
+    private javax.swing.JScrollPane VVaccinesPane;
+    private javax.swing.JTextArea VVaccinesText;
     private javax.swing.JLabel VaccinationRoomLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -164,8 +164,8 @@
                                               <Component id="VDeskPane5" min="-2" pref="100" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="VPatientLabel" min="-2" max="-2" attributes="0"/>
-                                                  <Component id="VPatientPane" min="-2" pref="70" max="-2" attributes="0"/>
+                                                  <Component id="VVaccinesLabel" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="VVaccinesPane" min="-2" pref="70" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -257,9 +257,9 @@
                           <Component id="VDeskPane4" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
                           <Component id="VDeskPane5" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="VPatientLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="VVaccinesLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="VPatientPane" min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="VVaccinesPane" min="-2" pref="30" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -764,12 +764,12 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="VPatientLabel">
+    <Component class="javax.swing.JLabel" name="VVaccinesLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Patient"/>
+        <Property name="text" type="java.lang.String" value="Available Vaccines"/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JScrollPane" name="VPatientPane">
+    <Container class="javax.swing.JScrollPane" name="VVaccinesPane">
       <Properties>
         <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
         <Property name="verticalScrollBarPolicy" type="int" value="21"/>
@@ -783,7 +783,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextArea" name="VPatientText">
+        <Component class="javax.swing.JTextArea" name="VVaccinesText">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>

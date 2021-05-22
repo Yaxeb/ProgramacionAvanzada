@@ -54,5 +54,29 @@ public class Desk {
     public int getWorker(){
         return this.iDWorker;
     }
+
+    @Override
+    public String toString() {
+        String pid = String.format("%04d", iDPatient);
+        String wid = String.format("%02d", iDWorker);
+        if (iDPatient == -1 && iDWorker == -1) //Empty desk
+        {
+            return "";
+        }
+        else if (iDPatient == -1 && iDWorker != -1)//Desk without Patient
+        {
+            return "H" + wid;
+        }
+        else if (iDPatient != -1 && iDWorker == -1)//Desk without worker
+        {
+            return "P" + pid;
+        }
+        else //Full desk
+        {
+            return "H" + wid + ", " + "P" + pid;
+        }
+        
+        
+    }
     
 }

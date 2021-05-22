@@ -19,8 +19,10 @@ public class Reception {
     // cuando les atiendan... se van a entering Q... y cuando les den un notify o lo que usemos
     // que entre el primero...
     /**
-     * 
-     * @param patient 
+     * Method that inserts a patient in a waiting queue. This queue represents
+     * the patients waiting to be attended by the auxiliar to check if they have
+     * an appointment.
+     * @param patient The patient entering the hospital
      */
     public synchronized void enterWaitingQueue(Patient patient){
         try{
@@ -35,6 +37,12 @@ public class Reception {
         
         
     }
+    /**
+     * Method that removes a patient from the waiting queue. This queue represents
+     * the patients waiting to be attended by the auxiliar to check if they have
+     * an appointment.
+     * @param patient  The patient exiting the waiting queue
+     */
     public synchronized void exitWaitingQueue(Patient patient){
         try{
             waitingSemaphore.acquire();
@@ -47,6 +55,11 @@ public class Reception {
         }
     }
     
+    /**
+     * Method that inserts a patient in an entering queue. This queue represents
+     * the patients waiting to go to the vaccination Room
+     * @param patient The patient waiting to enter the vaccination room
+     */
     public synchronized void enterEnteringQueue(Patient patient){
         try{
             enteringSemaphore.acquire();
@@ -58,6 +71,11 @@ public class Reception {
             waitingSemaphore.release();
         }
     }
+    /**
+     * Method that removes a patient from the entering queue. This queue represents
+     * the patients waiting to go to the vaccination Room
+     * @param patient The patient waiting to enter the vaccination room
+     */
     public synchronized void exitEnteringQueue(Patient patient){
         try{
             enteringSemaphore.acquire();
@@ -69,7 +87,11 @@ public class Reception {
             waitingSemaphore.release();
         }
     }
-    
+    /**
+     * Returns the Entering queue. This queue represents
+     * the patients waiting to go to the vaccination Room
+     * @return The Entering Queue
+     */
     public ArrayList<Patient> getEnteringQueue(){
         ArrayList<Patient> eQueue = new ArrayList<>();
         try{
@@ -82,7 +104,12 @@ public class Reception {
         }
         return eQueue;
     }
-    
+    /**
+     * Returns the Waiting queue. This queue represents
+     * the patients waiting to be attended by the auxiliar to check if they have
+     * an appointment.
+     * @return The Waiting queue
+     */
     public ArrayList<Patient> getWaitingQueue(){
         ArrayList<Patient> wQueue = new ArrayList<>();
         try{
@@ -95,11 +122,17 @@ public class Reception {
         }
         return wQueue;
     }
-    
+    /**
+     * Returns the auxiliary worker who is in charge of checking the appointments
+     * @return The auxiliary worker who is in charge of checking the appointments
+     */
     public AuxWorker getAuxWorker(){
         return this.auxWorker1;
     }
-    
+    /**
+     * Sets the auxiliary worker who will be in charge of checking the appointments
+     * @param auxWorker1 The auxiliary worker who will be in charge of checking the appointments
+     */
     public void setAuxWorker(AuxWorker auxWorker1){
         this.auxWorker1 = auxWorker1;
     }

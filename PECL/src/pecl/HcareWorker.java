@@ -1,6 +1,9 @@
 package pecl;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +17,8 @@ public class HcareWorker extends Thread{
     private final int maximum;
     private Hospital hospital; 
     private boolean beenAwaken;
+    private Lock lock; 
+    private Condition noWorkToDo; 
     
 
     public HcareWorker(int id, int pVaccinated, Hospital hospital) {
@@ -21,14 +26,15 @@ public class HcareWorker extends Thread{
         this.pVaccinated = pVaccinated;
         this.hospital = hospital;
         this.beenAwaken = false;
-        maximum = 15;
+        this.maximum = 15;
+        this.lock = new ReentrantLock();
+        this.noWorkToDo = lock.newCondition();
     }
     
     @Override
     public void run(){
-        ArrayList<Desk> desksVaccRoom = hospital.getVaccRoom().getDesks();
-        ArrayList<Desk> desksObsRoom = hospital.getObsRoom().getDesks();
-        
+        ArrayList<Desk> desksVaccRoom;
+        ArrayList<Desk> desksObsRoom;     
         if (beenAwaken)
         {
             
@@ -47,25 +53,62 @@ public class HcareWorker extends Thread{
         }
               
         
-        synchronized (this)
-        {
-             while (iDDeskVacc == -1)
+        
+        
+        try {
+            lock.lock();
+            desksVaccRoom = hospital.getVaccRoom().getDesks();
+            desksObsRoom = hospital.getObsRoom().getDesks();        
+            
+            while (iDDeskVacc == -1)
+            {
+                for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
+                {
+                    Desk desk = desksVaccRoom.get(i);
+                    if (desk.getWorker() != -1)
+                    {
+                        if (Math.random() > 0.5)
+                        {
+                            desk.setWorker(hid);
+                            desksVaccRoom.set(i, desk);
+                            iDDeskVacc = i;
+                         }
+                    }
+                }
+            }
+            
+             while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) 
              {
-                 for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
-                 {
-                     Desk desk = desksVaccRoom.get(i);
-                     if (desk.getWorker() != -1)
-                     {
-                         if (Math.random() > 0.5)
-                         {
-                             desk.setWorker(hid);
-                             desksVaccRoom.set(i, desk);
-                             iDDeskVacc = i;
-                          }
-                     }
-                 }
+                noWorkToDo.await();
              }
-         }
+
+        } 
+        catch (InterruptedException ex) 
+        {
+            // no work to do but been interrupted because the worker is needed 
+             beenAwaken = true;
+             Logger.getLogger(HcareWorker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // despierto y con paciente...          
+             timeToVaccine = 3000 + (int) Math.random() * 2000;
+             int pid = desksVaccRoom.get(iDDeskVacc).getPatient();
+            
+             vaccinatePatient(hospital.getPatient(pid), this, timeToVaccine);
+             counter++;
+             
+             if (counter % 15 == 0){
+                try {
+                    sleep(5000 + (int) Math.random() * 3000); 
+                }
+                catch (InterruptedException ex) 
+                {
+                    // awaken while vaccinating. (unlikely to happen)
+                    
+                }
+             }
+        
+    
 //        while (hospital.getObsRoom().getButton() > 0) { // integer > 1
 //             
 //             // atomic integer... 
@@ -76,15 +119,8 @@ public class HcareWorker extends Thread{
 //             //sincronizas con el paciente
 //             synchronizeloquesea();
 //        }
-            
-             // sitting the worker in a working post. 
-             
-            
-             // mientras no haya paciente, se duerme...
-             // tocará hacer un lock y toda la movida...
-             while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) {
-                 condition.await(); // dormir
-                 /*
+
+                /*
                    crear un booleano que diga que hay alguien en la condicion de await
                    esto nos permitirá crear un signal de forma segura
                    en caso de que ese booleano no esté en true, no podremos hacer signal tampoco
@@ -99,25 +135,8 @@ public class HcareWorker extends Thread{
                     se va a ayudar al observation room.
                  */
                  
-             }
-             // despierto y con paciente...          
-             timeToVaccine = 3000 + (int) Math.random() * 2000;
-             int pid = desksVaccRoom.get(iDDeskVacc).getPatient();
-            
-             vaccinatePatient(hospital.getPatient(pid), this, timeToVaccine);
-             counter++;
              
-             if (counter % 15 == 0){
-                try {
-                    sleep(5000 + (int) Math.random() * 3000); 
-                }
-                catch (InterruptedException ex) 
-                {
-                    // being required in the observation room.
-                    beenAwaken = true;
-                    
-                }
-             }
+             
             
              // le tiene que hacer signal auxWorker de que alguien va...
             // una clase extra para la comunicacion de ambas.      

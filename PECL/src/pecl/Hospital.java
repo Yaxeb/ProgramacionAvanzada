@@ -1,8 +1,11 @@
 package pecl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Hospital {
     private final Reception reception;
@@ -10,16 +13,20 @@ public class Hospital {
     private final ObservationRoom obsRoom;
     private final AtomicInteger capacity;
     private HashMap<Integer, Patient>  patients;
+    private HashMap<Integer, HcareWorker> hcareWorkers;
+    private ArrayList<HcareWorker> restRoom;
     private Semaphore semEnterVacc = new Semaphore(10);
     private Semaphore semEnterObs = new Semaphore(20);
     private Semaphore semPatients = new Semaphore(1);
-    
+    private Semaphore semException = new Semaphore(1);
     public Hospital(Reception reception, VaccRoom vaccRoom, ObservationRoom obsRoom) {
         this.capacity = new AtomicInteger();
         this.reception = reception;
         this.vaccRoom = vaccRoom;
         this.obsRoom = obsRoom;
         this.patients = new HashMap<>();
+        this.hcareWorkers = new HashMap<>(); 
+        this.restRoom = new ArrayList<>();
     }
     
     public void enterHospital(Patient patient){
@@ -93,30 +100,66 @@ public class Hospital {
     
     
     public void enterObservationRoom(Patient patient, int iDDesk){
+        boolean allWorkersBusy = true;
         obsRoom.sitPatient(patient, iDDesk);
         try{
         patient.sleep(10000);
-        }catch(Exception e){
-            //in case something goes wrong, still to implement
-            /*
-            todo esto dentro de un lock, o un semaforo...
-            miramos todas las mesas una a una, comprobando si hay algun worker
-            que no tenga paciente, en caso de que lo haya, se llama al worker 
-            para que venga a visitar al usuario con complicaciones.
-            
-            en caso de que todos esos workers estén trabajando y haya workers durmiendo
-            se despierta al primer worker durmiendo (posicion 0 del arraylist de gente descansando)
-            en ese momento, se activa un flag en hcareWorker que diga que esta activo en modo
-            especial, y tiene que obviar su comportamiento natural y dirigirse a la sala 
-            de observacion donde tenga que visitar al paciente con problemas, despues, se desactiva
-            el flag y se vuelve a descansar. 
-            
-            en caso de que todos los workers esten trabajando y no haya workers durmiendo,
-            se espera a que haya un worker que termine de vacunar, este comprobara de forma
-            natural siempre antes de que pueda pasar nadie a la mesa si existe un paciente con 
-            complicaciones, en caso afirmativo, se irá de la mesa y se dirigirá al observation room. 
-            
-            */
+        } catch(Exception e) {
+             try {
+                 semException.acquire();
+                 ArrayList<Desk> desksVaccRoom = vaccRoom.getDesks();
+                
+                 for (Desk desk : desksVaccRoom) 
+                 {
+                    // In case that there is a worker and not a patient
+                     if (desk.getWorker() != -1 && desk.getPatient() == -1) 
+                     {
+                          allWorkersBusy = false;
+                          // first case, the worker is sleeping because it has no work to do
+                          if (hcareWorkers.get(desk.getWorker()).isAwaiting())
+                          {
+                              condition.signal(); // we should call a method to signal the worker
+                                                  // INSIDE HcareWorker.java
+                          }
+                     }
+                 }
+                
+                // second case, all workers were busy and are some workers sleeping.
+                 if (allWorkersBusy && !restRoom.isEmpty()){
+                    
+                      restRoom.get(0).setAwaken(true);
+                      restRoom.get(0).interrupt();
+                 }
+                
+                // third case, all workers are busy and none are sleeping. 
+                else if (allWorkersBusy && restRoom.isEmpty()) {
+                    
+                }
+                
+                
+                //in case something goes wrong, still to implement
+                /*
+                todo esto dentro de un lock, o un semaforo...
+                miramos todas las mesas una a una, comprobando si hay algun worker
+                que no tenga paciente, en caso de que lo haya, se llama al worker
+                para que venga a visitar al usuario con complicaciones.
+                
+                en caso de que todos esos workers estén trabajando y haya workers durmiendo
+                se despierta al primer worker durmiendo (posicion 0 del arraylist de gente descansando)
+                en ese momento, se activa un flag en hcareWorker que diga que esta activo en modo
+                especial, y tiene que obviar su comportamiento natural y dirigirse a la sala
+                de observacion donde tenga que visitar al paciente con problemas, despues, se desactiva
+                el flag y se vuelve a descansar.
+                
+                en caso de que todos los workers esten trabajando y no haya workers durmiendo,
+                se espera a que haya un worker que termine de vacunar, este comprobara de forma
+                natural siempre antes de que pueda pasar nadie a la mesa si existe un paciente con
+                complicaciones, en caso afirmativo, se irá de la mesa y se dirigirá al observation room.
+                
+                */
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Hospital.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         obsRoom.exitPatient(patient, iDDesk);
         semEnterObs.release();

@@ -192,6 +192,10 @@ public class Hospital {
         return this.obsRoom;
     }
     
+    public ArrayList<HcareWorker> getRestRoom(){
+        return this.restRoom;
+    }
+    
     public void addPatient(Patient patient){
         try
         {
@@ -200,6 +204,7 @@ public class Hospital {
         patients.put(patient.getPid(), patient);
         semPatients.release();
     }
+    
     public void removePatient(Patient patient){
         try
         {
@@ -208,6 +213,7 @@ public class Hospital {
         patients.remove(patient.getPid());
         semPatients.release();
     }
+    
     public Patient getPatient(int patientID){
         try
         {
@@ -216,5 +222,13 @@ public class Hospital {
         Patient patient = patients.get(patientID);
         semPatients.release();
         return patient;
+    }
+    
+    public void writeRestRoom(){
+        String text = "";
+        for (HcareWorker worker : restRoom) {
+            text += "H" + worker.getHId() + ", ";
+        }
+        //restRoomText.setText(text);
     }
 }

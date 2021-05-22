@@ -116,18 +116,19 @@ public class Hospital {
                      {
                           allWorkersBusy = false;
                           // first case, the worker is sleeping because it has no work to do
-                          if (hcareWorkers.get(desk.getWorker()).isAwaiting())
+                          if (hcareWorkers.get(desk.getWorker()).isWorking())
                           {
-                              condition.signal(); // we should call a method to signal the worker
-                                                  // INSIDE HcareWorker.java
+                              hcareWorkers.get(desk.getWorker()).signalNoWorkToDo(); 
+                              // will it work? 
+                              
+                              // we should call a method to signal the worker
+                              // INSIDE HcareWorker.java
                           }
                      }
                  }
                 
                 // second case, all workers were busy and are some workers sleeping.
                  if (allWorkersBusy && !restRoom.isEmpty()){
-                    
-                      restRoom.get(0).setAwaken(true);
                       restRoom.get(0).interrupt();
                  }
                 

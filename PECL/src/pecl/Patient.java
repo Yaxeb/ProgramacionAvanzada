@@ -8,11 +8,11 @@ public class Patient extends Thread{
     private final int randomChance;
     private Hospital hospital;
     private int timeToVaccine;
-    
+    private int timeWithComplications;
     public Patient(int pid, Hospital hospital) {
         this.pid = pid;
         this.randomChance = (int) (Math.random() * 101);
-        
+        this.timeWithComplications = 0;
     }
     
     @Override
@@ -31,11 +31,23 @@ public class Patient extends Thread{
             }
             
             hospital.enterObservationRoom(this, obsDesk);
+            
+            try { 
+                sleep(timeWithComplications);
+            } 
+            catch (InterruptedException ex) 
+            {
+                Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
     public void setTimeToVaccine(int time){
         this.timeToVaccine = time;
+    }
+    
+    public void setTimeWithComplications(int time){
+        this.timeWithComplications = time;
     }
     
     

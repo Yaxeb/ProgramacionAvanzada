@@ -7,6 +7,7 @@ public class Patient extends Thread{
     private final int pid;
     private final int randomChance;
     private Hospital hospital;
+    private int timeToGetDesk;
     private int timeToVaccine;
     private int timeWithComplications;
     public Patient(int pid, Hospital hospital) {
@@ -19,8 +20,19 @@ public class Patient extends Thread{
     public void run(){
         hospital.enterHospital(this);
         int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());
-        if ( iDDesk != 0) { // tengo que obtener el hcareworker que esté ahi 
+        if ( iDDesk != 0) { 
+            
+            try {
+            // tengo que obtener el hcareworker que esté ahi
+                sleep(timeToGetDesk);
+            } 
+            catch (InterruptedException ex) 
+            {
+                Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             int obsDesk = hospital.enterVaccRoom(this, iDDesk);
+            
             try 
             {
                 sleep(timeToVaccine);
@@ -40,6 +52,10 @@ public class Patient extends Thread{
                 Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public void setTimeToGetDesk(int time){
+        this.timeToGetDesk = time;
     }
     
     public void setTimeToVaccine(int time){

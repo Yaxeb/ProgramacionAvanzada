@@ -208,6 +208,6 @@ public class HcareWorker extends Thread{
 
     public void setpVaccinated(int pVaccinated) {
         this.pVaccinated = pVaccinated;
-    }  
+    }
 
 }

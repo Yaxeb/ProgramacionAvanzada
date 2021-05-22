@@ -39,22 +39,28 @@ public class Hospital {
     
     public synchronized int enterReception(Patient patient, AuxWorker aWorker){
         while(aWorker.isResting()){ //if the recepcionist is on break, the 
-            try{                    //patient will wait until it comes back
+            try
+            {                    //patient will wait until it comes back
                 wait();
-            }catch(Exception e){}
+            }
+            catch(Exception e){}
         }
         if (patient.hasAppointment()){
             reception.exitWaitingQueue(patient);
             reception.enterEnteringQueue(patient);
             //If there is any available desk
-            try{
+            try
+            {
                 semEnterVacc.acquire();
-            }catch(Exception e){}
+            }
+            catch(Exception e){}
             //auxworker tells patient the desk id
             int vacDesk = aWorker.availableDesk();
             reception.exitEnteringQueue(patient);// the patient leaves the reception room
             return vacDesk;                      // the id of its desk is returned
-        }else{
+        }
+        else
+        {
             reception.exitWaitingQueue(patient); //the patient didn't have an appointment
             removePatient(patient);              // so it leaves the hospital
             return 0;                           
@@ -78,9 +84,11 @@ public class Hospital {
         vaccRoom.sitPatient(patient, iDDesk);
         //communication between the worker and the patient to know the 
         //duration of the vaccine
-        try{                            //we try to enter the observation room
-                semEnterObs.acquire();
-            }catch(Exception e){}
+        try //we try to enter the observation room
+        {                            
+             semEnterObs.acquire();
+        }
+        catch(Exception e){}
         int obsDesk = obsRoom.getAvailableDesk();
         vaccRoom.exitPatient(patient,iDDesk); // it leaves the desk
         semEnterVacc.release();

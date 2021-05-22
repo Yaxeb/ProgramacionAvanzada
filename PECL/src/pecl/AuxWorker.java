@@ -29,44 +29,44 @@ public class AuxWorker extends Thread {
         ArrayList<Patient> waitingQueue;
         if (aid == 1) 
         {
-            while (counter != 2000) { //total number of patients generated = 2000
-                enteringQueue = hospital.getReception().getEnteringQueue();
-                waitingQueue = hospital.getReception().getWaitingQueue();
+             while (counter != 2000) { //total number of patients generated = 2000
+                 enteringQueue = hospital.getReception().getEnteringQueue();
+                 waitingQueue = hospital.getReception().getWaitingQueue();
                 
-                while (!enteringQueue.isEmpty()) 
-                {
-                    patient = waitingQueue.get(1);
-                    if (patient.hasAppointment()) 
-                    {
-                        counter++;
-                        waitingQueue.remove(0); // no se si aqui o está hecho en otro lado
-                        enteringQueue.add(patient);
+                 while (!enteringQueue.isEmpty()) 
+                 {
+                     patient = waitingQueue.get(1);
+                     if (patient.hasAppointment()) 
+                     {
+                          counter++;
+                          waitingQueue.remove(0); // no se si aqui o está hecho en otro lado
+                          enteringQueue.add(patient);
                     }
                     // check if there is a desk so the user will go.
-                    int nrDesk = hospital.getVaccRoom().getAvailableDesk();
-                    while (nrDesk == -1) 
-                    {
-                        // tienen que dormir tanto el paciente como el trabajador
-                    } 
+                     int nrDesk = hospital.getVaccRoom().getAvailableDesk();
+                     while (nrDesk == -1) 
+                     {
+                          // tienen que dormir tanto el paciente como el trabajador
+                     } 
                         
-                    if (counter % maximum == 0)
-                    {
-                        isResting = true;
-                        try 
-                        {
-                            sleep(3000 + (int) (Math.random() * 2001));
-                        } 
-                        catch (InterruptedException ex) 
-                        {
-                            Logger.getLogger(AuxWorker.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        finally 
-                        {
-                            isResting = false;
-                        }
+                     if (counter % maximum == 0)
+                     {
+                          isResting = true;
+                          try 
+                          {
+                              sleep(3000 + (int) (Math.random() * 2001));
+                          } 
+                          catch (InterruptedException ex) 
+                          {
+                              Logger.getLogger(AuxWorker.class.getName()).log(Level.SEVERE, null, ex);
+                          }
+                          finally 
+                          {
+                              isResting = false;
+                          }
                         
-                    }
-                } 
+                     }
+                 } 
                 // entering Queue no está vacio 
                 // dormir al recepcionista
                 
@@ -115,6 +115,12 @@ public class AuxWorker extends Thread {
                vuelve al trabajo
              */
         }
+    }
+    
+    public synchronized void availableDesk(){
+        ArrayList<Patient> enteringQueue = hospital.getReception().getEnteringQueue();
+        int timeToSleep = 500 + (int) (Math.random() * 500);
+        enteringQueue.get(0).setTimeToGetDesk(aid);
     }
 
     public int getAid() {

@@ -1,20 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pecl;
 import hospitalInterface.*;
 import java.util.ArrayList;
 
-/**
- *
- * @author Oqueo
- */
 public class StringManager extends Thread{
     Hospital hospital;
     MainWindow window;
-
+    /**
+     * Constructor method for StringManager
+     * @param hospital The hospital which information is displayed
+     * @param window The window to display the information
+     */
     public StringManager(Hospital hospital, MainWindow window) {
         this.hospital = hospital;
         this.window = window;
@@ -26,7 +21,9 @@ public class StringManager extends Thread{
             textSetter();
         }
     }
-    
+    /**
+     * Method that updates the interface. It sequentially updates all parameters
+     */
     public void textSetter(){
         //Reception
         window.getReception().setText(hospital.getReception().allPatientsToString()); // Reception

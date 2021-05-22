@@ -224,11 +224,12 @@ public class Hospital {
         return patient;
     }
     
-    public void writeRestRoom(){
+    public String restRoomToString(){
         String text = "";
         for (HcareWorker worker : restRoom) {
             text += "H" + worker.getHId() + ", ";
         }
+        return text;
         //restRoomText.setText(text);
     }
 }

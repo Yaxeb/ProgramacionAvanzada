@@ -12,13 +12,11 @@ import pecl.*;
  * @author Oqueo
  */
 public class MainWindow extends javax.swing.JFrame {
-    private static Hospital hospital;
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
-        
     }
 
     /**
@@ -855,22 +853,67 @@ public class MainWindow extends javax.swing.JFrame {
         Hospital hospital = new Hospital(null,null,null);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                updateWindow(hospital);
                 new MainWindow().setVisible(true);
-                for(int i = 0;i<vDesks.size();i++){
-                    vDesks.get(i).setText(hospital.getVaccRoom().getDesks().get(i).toString());
-                }
-                for(int i = 0;i<oDesks.size();i++){
-                    oDesks.get(i).setText(hospital.getObsRoom().getDesks().get(i).toString());
-                }
-                VVaccinesText.setText(""+ hospital.getVaccRoom().getVaccines());
                 
             }
         });
     }
    
-    public void updateWindow(Hospital hospital){
-        
+    public javax.swing.JTextArea getReception(){
+        return ReceptionText;
+    }
+    public javax.swing.JTextArea getReceptionPatient(){
+        return RPatientText;
+    }
+    public javax.swing.JTextArea getReceptionAux(){
+        return RAuxiliaryText;
+    }
+    public javax.swing.JTextArea getRestRoom(){
+        return RestroomText;
+    }
+    public ArrayList<javax.swing.JTextArea> getVDesks(){
+        ArrayList<javax.swing.JTextArea> l = new ArrayList<>();
+        l.add(VDesk1);
+        l.add(VDesk2);
+        l.add(VDesk3);
+        l.add(VDesk4);
+        l.add(VDesk5);
+        l.add(VDesk6);
+        l.add(VDesk7);
+        l.add(VDesk8);
+        l.add(VDesk9);
+        l.add(VDesk10);
+        return l;
+    }
+    public javax.swing.JTextArea getVaccines(){
+        return VVaccinesText;
+    }
+    public javax.swing.JTextArea getVaccRoomAux(){
+        return VAuxiliaryText;
+    }
+    public ArrayList<javax.swing.JTextArea> getODesks(){
+        ArrayList<javax.swing.JTextArea> l = new ArrayList<>();
+        l.add(ODesk1);
+        l.add(ODesk2);
+        l.add(ODesk3);
+        l.add(ODesk4);
+        l.add(ODesk5);
+        l.add(ODesk6);
+        l.add(ODesk7);
+        l.add(ODesk8);
+        l.add(ODesk9);
+        l.add(ODesk10);
+        l.add(ODesk11);
+        l.add(ODesk12);
+        l.add(ODesk13);
+        l.add(ODesk14);
+        l.add(ODesk15);
+        l.add(ODesk16);
+        l.add(ODesk17);
+        l.add(ODesk18);
+        l.add(ODesk19);
+        l.add(ODesk20);
+        return l;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

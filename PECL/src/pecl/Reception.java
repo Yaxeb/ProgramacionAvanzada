@@ -122,6 +122,17 @@ public class Reception {
         }
         return wQueue;
     }
+    public String allPatientsToString(){
+        ArrayList<Patient> all = new ArrayList<>();
+        String text = "";
+        all.addAll(getEnteringQueue());
+        all.addAll(getWaitingQueue());
+        for (Patient patient : all)
+        {
+            text+= "P"+String.format("%04d", patient.getPid()) + ", ";
+        }
+        return text;
+    }
     /**
      * Returns the auxiliary worker who is in charge of checking the appointments
      * @return The auxiliary worker who is in charge of checking the appointments

@@ -9,10 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Hospital {
-    private final Reception reception;
-    private final VaccRoom vaccRoom;
-    private final ObservationRoom obsRoom;
-    private final AtomicInteger capacity;
+    private Reception reception;
+    private VaccRoom vaccRoom;
+    private ObservationRoom obsRoom;
+    private AtomicInteger capacity;
     private HashMap<Integer, Patient>  patients;
     private HashMap<Integer, HcareWorker> hcareWorkers;
     private ArrayList<HcareWorker> restRoom;
@@ -22,11 +22,8 @@ public class Hospital {
     private Semaphore semException = new Semaphore(1);
     private MainWindow window;
     
-    public Hospital(Reception reception, VaccRoom vaccRoom, ObservationRoom obsRoom, MainWindow window) {
+    public Hospital(MainWindow window) {
         this.capacity = new AtomicInteger();
-        this.reception = reception;
-        this.vaccRoom = vaccRoom;
-        this.obsRoom = obsRoom;
         this.patients = new HashMap<>();
         this.hcareWorkers = new HashMap<>(); 
         this.restRoom = new ArrayList<>();
@@ -196,12 +193,24 @@ public class Hospital {
         return this.vaccRoom;
     }
     
+    public void setVaccRoom(VaccRoom vaccRoom){
+        this.vaccRoom = vaccRoom;
+    }
+    
     public Reception getReception(){
         return this.reception;
     }
     
+    public void setReception(Reception reception){
+        this.reception = reception;
+    }
+    
     public ObservationRoom getObsRoom(){
         return this.obsRoom;
+    }
+    
+    public void setObsRoom(ObservationRoom obsRoom){
+        this.obsRoom = obsRoom;
     }
     
     public ArrayList<HcareWorker> getRestRoom(){

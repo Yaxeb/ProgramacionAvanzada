@@ -20,13 +20,14 @@ public class Patient extends Thread{
         this.pid = pid;
         this.randomChance = (int) (Math.random() * 101);
         this.timeWithComplications = 0;
+        this.hospital = hospital;
     }
     
     @Override
     public void run(){
         hospital.enterHospital(this);
         int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());
-        if ( iDDesk != 0) { 
+        if (iDDesk != 0) { 
             
             try {
             // tengo que obtener el hcareworker que esté ahi

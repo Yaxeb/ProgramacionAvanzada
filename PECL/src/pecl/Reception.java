@@ -22,11 +22,7 @@ public class Reception {
         this.hospital = hospital;    
     }
     
-    // while not atendidos.... que se vayan a dormir... 
-    // semaforos... 
-    
-    // cuando les atiendan... se van a entering Q... y cuando les den un notify o lo que usemos
-    // que entre el primero...
+
     /**
      * Method that inserts a patient in a waiting queue. This queue represents
      * the patients waiting to be attended by the auxiliar to check if they have
@@ -42,10 +38,9 @@ public class Reception {
         finally
         {
             waitingSemaphore.release();
-        }
-        
-        
+        } 
     }
+    
     /**
      * Method that removes a patient from the waiting queue. This queue represents
      * the patients waiting to be attended by the auxiliar to check if they have
@@ -80,6 +75,7 @@ public class Reception {
             waitingSemaphore.release();
         }
     }
+    
     /**
      * Method that removes a patient from the entering queue. This queue represents
      * the patients waiting to go to the vaccination Room
@@ -96,6 +92,7 @@ public class Reception {
             waitingSemaphore.release();
         }
     }
+    
     /**
      * Returns the Entering queue. This queue represents
      * the patients waiting to go to the vaccination Room
@@ -113,6 +110,7 @@ public class Reception {
         }
         return eQueue;
     }
+    
     /**
      * Returns the Waiting queue. This queue represents
      * the patients waiting to be attended by the auxiliar to check if they have
@@ -131,6 +129,7 @@ public class Reception {
         }
         return wQueue;
     }
+    
     public String allPatientsToString(){
         ArrayList<Patient> all = new ArrayList<>();
         String text = "";
@@ -142,6 +141,7 @@ public class Reception {
         }
         return text;
     }
+    
     /**
      * Returns the auxiliary worker who is in charge of checking the appointments
      * @return The auxiliary worker who is in charge of checking the appointments
@@ -149,6 +149,7 @@ public class Reception {
     public AuxWorker getAuxWorker(){
         return this.auxWorker1;
     }
+    
     /**
      * Sets the auxiliary worker who will be in charge of checking the appointments
      * @param auxWorker1 The auxiliary worker who will be in charge of checking the appointments

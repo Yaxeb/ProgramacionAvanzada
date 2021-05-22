@@ -37,6 +37,7 @@ public class HcareWorker extends Thread{
         this.lock = new ReentrantLock();
         this.noWorkToDo = lock.newCondition();
         this.working = false;
+        this.iDDeskVacc = -1;
     }
     
     @Override
@@ -100,7 +101,7 @@ public class HcareWorker extends Thread{
                      }
                  }
              }
-            
+             
              while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) 
              {
                  working = false;

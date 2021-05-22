@@ -35,11 +35,13 @@ public class MainWindow extends javax.swing.JFrame {
             HcareWorker worker = new HcareWorker(i, 0,hospital);
             worker.start();
         }
-        for(int i = 1; i <= 2000; i++)
+        
+        for(int i = 1; i <= 2; i++)
         {
             Patient patient = new Patient(i, hospital);
             patient.start();
         }
+        
     }
 
     /**

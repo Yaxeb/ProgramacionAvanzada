@@ -54,7 +54,18 @@ public class Hospital {
             }
             catch(Exception e){}
         }
-        return aWorker.availableDesk(patient);
+        int desk = aWorker.availableDesk(patient);
+        if(desk == 0)
+        {
+            System.out.println("Patient P"+String.format("%04d", patient.getPid()) + " has come without an appointment");
+            clogger.write("Patient P"+String.format("%04d", patient.getPid()) + " has come without an appointment", "Reception");
+        }
+        else
+        {
+            System.out.println("Patient P"+String.format("%04d", patient.getPid())+" in desk "+desk + "controlled by " + getVaccRoom().getDesks().get(desk-1).getWorker());
+            clogger.write("Patient P"+String.format("%04d", patient.getPid())+" in desk "+desk + "controlled by " + getVaccRoom().getDesks().get(desk-1).getWorker(), "Reception");
+        }
+        return desk;
         /*
         hablar con el asistente y mirar si está en lista...
         Si está en lista se va a la enteringQ y sigue normal, return el numero de la mesa
@@ -98,6 +109,8 @@ public class Hospital {
     
     public void enterObservationRoom(Patient patient, int iDDesk){
         boolean allWorkersBusy = true;
+        System.out.println("Patient P"+String.format("%04d", patient.getPid())+" in desk "+iDDesk + "controlled by " + getObsRoom().getDesks().get(iDDesk-1).getWorker());
+        clogger.write("Patient P"+String.format("%04d", patient.getPid())+" in desk "+iDDesk + "controlled by " + getObsRoom().getDesks().get(iDDesk-1).getWorker(), "Observation Room");
         obsRoom.sitPatient(patient, iDDesk);
         try{
         patient.sleep(10000);
@@ -200,6 +213,14 @@ public class Hospital {
     public void setObsRoom(ObservationRoom obsRoom){
         this.obsRoom = obsRoom;
 
+    }
+
+    public CustomLogger getClogger() {
+        return clogger;
+    }
+
+    public void setClogger(CustomLogger clogger) {
+        this.clogger = clogger;
     }
     
     public ArrayList<HcareWorker> getRestRoom(){

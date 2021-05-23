@@ -5,8 +5,10 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class AuxWorker extends Thread {
 
+    
     private int aid;
     private int maximum; // maximum means how many items/patients
     // it must attend before taking a break
@@ -48,6 +50,8 @@ public class AuxWorker extends Thread {
 */
                      if (counter >= maximum)
                      {
+                          System.out.println("Auxiliary A1 begins his rest");
+                          hospital.getClogger().write("Auxiliary A1 begins his rest", "Reception");
                           isResting = true;
                           try 
                           {
@@ -59,6 +63,8 @@ public class AuxWorker extends Thread {
                           }
                           finally 
                           {
+                              System.out.println("Auxiliary A1 ends his rest");
+                              hospital.getClogger().write("Auxiliary A1 ends his rest", "Reception");
                               resetCounter();
                               isResting = false;
                           }  
@@ -83,6 +89,8 @@ public class AuxWorker extends Thread {
                 }
                 if (counter >= maximum)
                 {
+                    System.out.println("Auxiliary A2 begins his rest");
+                    hospital.getClogger().write("Auxiliary A2 begins his rest", "Vaccination Room");
                     isResting = true;
                     try 
                     {
@@ -94,6 +102,8 @@ public class AuxWorker extends Thread {
                     }
                     finally
                     {
+                        System.out.println("Auxiliary A2 ends his rest");
+                        hospital.getClogger().write("Auxiliary A2 ends his rest", "Vaccination Room");
                         resetCounter();
                         isResting = false;
                     }
@@ -145,6 +155,8 @@ public class AuxWorker extends Thread {
         }
         else
         {
+            
+            
             hospital.getReception().exitWaitingQueue(patient); //the patient didn't have an appointment
             hospital.removePatient(patient);              // so it leaves the hospital
             return 0;                           

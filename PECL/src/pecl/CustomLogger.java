@@ -8,28 +8,38 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 
 public class CustomLogger {
-    private String path = "./Logs/EvolutionHospital.txt";
-    public CustomLogger(){
-            
-    }
-        
-    public void log(String message) 
-    {
-        try 
-        {
+
+    //private String path = "./Logs/EvolutionHospital.txt";
+    
+    File path = new File("./Logs/EvolutionHospital.txt");
+    
+//    public synchronized void log(String message) {
+//        try {
+//            FileWriter myWriter = new FileWriter(path);
+//            myWriter.write(message);
+//            myWriter.close();
+//        } catch (IOException e) {
+//            System.out.println("An error occurred while logging.");
+//            e.printStackTrace();
+//        }
+//    }
+    
+    
+    public synchronized void log(String message) {
+        try {
             File fPath = new File("./Logs");
-            if (!fPath.exists()){
+            if (!fPath.exists()) {
                 fPath.mkdir();
             }
             FileWriter fw = new FileWriter(path);
-            try (PrintWriter write = new PrintWriter(new BufferedWriter(fw))) 
-            {
-            write.println(message);
+            try ( PrintWriter write = new PrintWriter(new BufferedWriter(fw))) {
+                write.println(message);
+                write.println("\n");
+
             }
-        }
-        catch (IOException ex) 
-        {
-            java.util.logging.Logger.getLogger(CustomLogger.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(CustomLogger.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hospitalInterface;
 import java.util.ArrayList;
 import pecl.*;
 
-/**
- *
- * @author Oqueo
- */
 public class MainWindow extends javax.swing.JFrame {
     /**
      * Creates new form MainWindow
@@ -36,7 +27,7 @@ public class MainWindow extends javax.swing.JFrame {
             worker.start();
         }
         
-        for(int i = 1; i <= 2; i++)
+        for(int i = 1; i <= 3; i++)
         {
             Patient patient = new Patient(i, hospital);
             patient.start();

@@ -21,6 +21,7 @@ public class Hospital {
     private Semaphore semPatients = new Semaphore(1);
     private Semaphore semException = new Semaphore(1);
     private MainWindow window;
+    private CustomLogger clogger;
     
     public Hospital(MainWindow window) {
         this.capacity = new AtomicInteger();
@@ -28,6 +29,7 @@ public class Hospital {
         this.hcareWorkers = new HashMap<>(); 
         this.restRoom = new ArrayList<>();
         this.window = window;
+        this.clogger = new CustomLogger();
     }
     
     public void enterHospital(Patient patient){
@@ -253,4 +255,9 @@ public class Hospital {
         return text;
         //restRoomText.setText(text);
     }
+    
+    public CustomLogger getLogger(){
+        return this.clogger;
+    }
+    
 }

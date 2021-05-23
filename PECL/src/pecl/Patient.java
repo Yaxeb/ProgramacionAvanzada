@@ -10,7 +10,7 @@ public class Patient extends Thread{
     private int timeToGetDesk;
     private int timeToVaccine;
     private int timeWithComplications;
-    private CustomLogger clogger;
+  //  private CustomLogger clogger;
     
     /**
      * Method constructor for Patient
@@ -22,12 +22,16 @@ public class Patient extends Thread{
         this.randomChance = (int) (Math.random() * 101);
         this.timeWithComplications = 0;
         this.hospital = hospital;
+       // this.clogger = hospital.getLogger();
     }
     
     @Override
     public void run(){
+        hospital.getLogger().log("test log");
         hospital.enterHospital(this);
+        //clogger.log("Patient " + pid + " Entered the hospital. ");
         int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());
+        //clogger.log("Patient " + pid + " Passed through reception. ");
         if (iDDesk != 0) { 
             
             try {

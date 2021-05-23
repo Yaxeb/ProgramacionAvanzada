@@ -21,6 +21,7 @@ public class HcareWorker extends Thread{
     private Lock lock;
     private Condition noWorkToDo;
     private Hospital hospital;
+   // private CustomLogger clogger;
     
     /**
      * Constructor of the HcareWorker
@@ -38,17 +39,17 @@ public class HcareWorker extends Thread{
         this.noWorkToDo = lock.newCondition();
         this.working = false;
         this.iDDeskVacc = -1;
+       // this.clogger = hospital.getLogger();
     }
     
     @Override
     public void run(){
+        System.out.println("haha xd");
         ArrayList<Desk> desksVaccRoom;
         ArrayList<Desk> desksObsRoom;
         int timeWithComplications;
         if (beenAwaken)
         {
-            // ve a la obs room, que te han despertado para eso. 
-            // hace la sincronizacion con el/los usuario/s, y se va a dormir de nuevo. 
             lock.lock();
             desksObsRoom = hospital.getObsRoom().getDesks();
             iDDeskObs = hospital.getObsRoom().checkComplications().get(0);
@@ -74,6 +75,7 @@ public class HcareWorker extends Thread{
             try 
             {
                 //starting the schedule. 
+                hospital.getLogger().log("Healthcare Worker " + hid + " started his schedule. ");
                 sleep(1000 + (int) (Math.random() * 2001));
             } 
             // impossible to happen since HcareWorkers are created first

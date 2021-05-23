@@ -44,7 +44,7 @@ public class HcareWorker extends Thread{
     
     @Override
     public void run(){
-        System.out.println("haha xd");
+        //System.out.println("haha xd");
         ArrayList<Desk> desksVaccRoom;
         ArrayList<Desk> desksObsRoom;
         int timeWithComplications;
@@ -75,7 +75,7 @@ public class HcareWorker extends Thread{
             try 
             {
                 //starting the schedule. 
-                hospital.getLogger().log("Healthcare Worker " + hid + " started his schedule. ");
+                //hospital.getLogger().log("Healthcare Worker " + hid + " started his schedule. ");
                 sleep(1000 + (int) (Math.random() * 2001));
             } 
             // impossible to happen since HcareWorkers are created first

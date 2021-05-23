@@ -27,7 +27,7 @@ public class Patient extends Thread{
     
     @Override
     public void run(){
-        hospital.getLogger().log("test log");
+        //hospital.getLogger().log("test log");
         hospital.enterHospital(this);
         //clogger.log("Patient " + pid + " Entered the hospital. ");
         int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());

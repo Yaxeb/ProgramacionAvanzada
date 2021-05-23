@@ -9,7 +9,7 @@ public class CustomLogger {
     private String path = "./Logs/EvolutionHospital.txt";
     private BufferedWriter bw;
     
-    public synchronized void log(String message) {
+    public CustomLogger() {
         try {
             this.bw = new BufferedWriter(new FileWriter(path));
         }catch(Exception e){
@@ -17,7 +17,7 @@ public class CustomLogger {
         }
     }
     
-    public void write(String line, String room)
+    public synchronized void  write(String line, String room)
     {
         try
         {

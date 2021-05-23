@@ -48,7 +48,7 @@ public class AuxWorker extends Thread {
                      }
                      // check if there is a desk so the user will go.
 */
-                     if (counter >= maximum)
+                     if (counter % maximum == 0)
                      {
                           System.out.println("Auxiliary A1 begins his rest");
                           hospital.getClogger().write("Auxiliary A1 begins his rest", "Reception");
@@ -65,7 +65,6 @@ public class AuxWorker extends Thread {
                           {
                               System.out.println("Auxiliary A1 ends his rest");
                               hospital.getClogger().write("Auxiliary A1 ends his rest", "Reception");
-                              resetCounter();
                               isResting = false;
                           }  
                      }
@@ -87,7 +86,7 @@ public class AuxWorker extends Thread {
                 {
                     Logger.getLogger(AuxWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (counter >= maximum)
+                if (counter % maximum == 0)
                 {
                     System.out.println("Auxiliary A2 begins his rest");
                     hospital.getClogger().write("Auxiliary A2 begins his rest", "Vaccination Room");
@@ -104,7 +103,6 @@ public class AuxWorker extends Thread {
                     {
                         System.out.println("Auxiliary A2 ends his rest");
                         hospital.getClogger().write("Auxiliary A2 ends his rest", "Vaccination Room");
-                        resetCounter();
                         isResting = false;
                     }
                 }
@@ -140,7 +138,7 @@ public class AuxWorker extends Thread {
             patient.setTimeToGetDesk(timeToSleep);
             try 
             {   // checking the desk
-            AuxWorker.sleep(timeToSleep);
+                AuxWorker.sleep(timeToSleep);
             }
             catch (InterruptedException ex) 
             {
@@ -175,17 +173,6 @@ public class AuxWorker extends Thread {
     
     public boolean isResting(){
         return this.isResting;
-    }
-    
-    public void resetCounter(){
-        try
-        {
-            semCounter.acquire();
-            counter=0;
-        }catch(Exception e){}
-        finally{
-            semCounter.release();
-        }
     }
     
     public void addToCounter(){

@@ -52,7 +52,7 @@ public class HcareWorker extends Thread{
         {
             lock.lock();
             desksObsRoom = hospital.getObsRoom().getDesks();
-            iDDeskObs = hospital.getObsRoom().checkComplications().get(0);
+            iDDeskObs = hospital.getObsRoom().checkComplications(hospital.getPatients()).get(0);
             desksObsRoom.get(iDDeskObs).setWorker(hid);
             int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
             timeWithComplications = 2000 + (int) Math.random() * 3001;
@@ -83,27 +83,37 @@ public class HcareWorker extends Thread{
         }
         
         try {
+            System.out.println("Mequierosentar");
              lock.lock();
              desksVaccRoom = hospital.getVaccRoom().getDesks();
              
              // sitting in a post. 
              while (iDDeskVacc == -1)
              {
-                 for (int i = 0 ; i < desksVaccRoom.size() ; i++) 
-                 {
-                     Desk desk = desksVaccRoom.get(i);
-                     if (desk.getWorker() != -1)
-                     {
-                          if (Math.random() > 0.5)
-                          {
-                              desk.setWorker(hid);
-                              desksVaccRoom.set(i, desk);
-                              iDDeskVacc = i;
-                          }
-                     }
-                 }
+                int i = 1;
+                while (i <= desksVaccRoom.size() && iDDeskVacc == -1) 
+                {
+                    Desk desk = desksVaccRoom.get(i-1);
+                    if (desk.getWorker() == -1)
+                    {
+                            desk.setWorker(hid);
+                            desksVaccRoom.set(i, desk);
+                            iDDeskVacc = i;
+                            System.out.println("Me siento");
+                            hospital.getVaccRoom().setDesks(desksVaccRoom);
+                    }
+                }
              }
-             
+        }
+        catch(Exception e){}
+        finally
+        {
+            lock.unlock();
+        }
+        try
+        {
+            lock.lock();
+             desksVaccRoom = hospital.getVaccRoom().getDesks();
              while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) 
              {
                  working = false;
@@ -145,15 +155,15 @@ public class HcareWorker extends Thread{
             lock.unlock();
         }
              // checking if any patient is requesting help due to complications
-             while (!hospital.getObsRoom().checkComplications().isEmpty()) {
+             while (!hospital.getObsRoom().checkComplications(hospital.getPatients()).isEmpty()) {
                  lock.lock();
                  desksObsRoom = hospital.getObsRoom().getDesks();
                  desksVaccRoom = hospital.getVaccRoom().getDesks();
-                 iDDeskObs = hospital.getObsRoom().checkComplications().get(0);
+                 iDDeskObs = hospital.getObsRoom().checkComplications(hospital.getPatients()).get(0);
                  iDDeskVacc = -1;
                  desksVaccRoom.get(iDDeskVacc).setWorker(-1);
                  desksObsRoom.get(iDDeskObs).setWorker(hid);
-                 hospital.getObsRoom().checkComplications().remove(0);
+                 hospital.getObsRoom().checkComplications(hospital.getPatients()).remove(0);
                  
                  int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
                  timeWithComplications = 2000 + (int) Math.random() * 3001;

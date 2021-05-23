@@ -1,13 +1,13 @@
 package pecl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ObservationRoom {
     ArrayList<Desk> desks;
-    private Hospital hospital; 
     private Lock desksLock;
     private Condition availableDesk;
     
@@ -15,11 +15,14 @@ public class ObservationRoom {
      * This method initializes the object
      * @param hospital The hospital this room belongs to
      */
-    public ObservationRoom(Hospital hospital){
-        desks = new ArrayList(20); 
+    public ObservationRoom(){
+        desks = new ArrayList<>(20);
+        for(int i = 0; i<20; i++)
+        {
+            this.desks.add(new Desk(i+1));
+        }
         this.desksLock = new ReentrantLock();
         this.availableDesk = desksLock.newCondition();
-        this.hospital = hospital;
         
         
     }
@@ -116,17 +119,17 @@ public class ObservationRoom {
      * due to the vaccine
      * It uses the HashMap of patients to retrieve the Patient using the ID stored
      * in the desk, and while checking it, if it's infected with a mutation due to the 
-     * vaccine, it adds the ID of their desk to an ArrayList.
-     * After traversing all desks, the counter is returned
+     * vaccine, it adds the ID of their desk to an ArrayList.After traversing all desks, the counter is returned
+     * @param patients 
      * @return An ArrayList with all the Desks' ID that have a patient with complications
      */
-    public ArrayList<Integer> checkComplications(){
+    public ArrayList<Integer> checkComplications(HashMap<Integer, Patient> patients){
         ArrayList<Integer> desksWithComplications = new ArrayList<>();
         try{
             desksLock.lock();
             for (int i = 0; i<desks.size(); i++)
             {
-                if (hospital.getPatient(desks.get(i).getPatient()).isInfected()){
+                if (patients.get(desks.get(i).getPatient()).isInfected()){
                     desksWithComplications.add(i+1);
                 }
             }

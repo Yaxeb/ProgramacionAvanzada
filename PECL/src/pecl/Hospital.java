@@ -20,10 +20,16 @@ public class Hospital {
     private Semaphore semEnterObs = new Semaphore(20);
     private Semaphore semPatients = new Semaphore(1);
     private Semaphore semException = new Semaphore(1);
+    private Semaphore semVacc = new Semaphore(1);
+    private Semaphore semRec = new Semaphore(1);
+    private Semaphore semObs = new Semaphore(1);
     private MainWindow window;
     private CustomLogger clogger;
     
-    public Hospital(MainWindow window) {
+    public Hospital(Reception reception, VaccRoom vaccRoom, ObservationRoom obsRoom, MainWindow window) {
+        this.reception = reception;
+        this.vaccRoom = vaccRoom;
+        this.obsRoom = obsRoom;
         this.capacity = new AtomicInteger();
         this.patients = new HashMap<>();
         this.hcareWorkers = new HashMap<>(); 
@@ -50,7 +56,9 @@ public class Hospital {
         }
         if (patient.hasAppointment()){
             reception.exitWaitingQueue(patient);
+            reception.getAuxWorker().addToCounter();
             reception.enterEnteringQueue(patient);
+            System.out.println("Fiesta");
             //If there is any available desk
             try
             {
@@ -58,7 +66,7 @@ public class Hospital {
             }
             catch(Exception e){}
             //auxworker tells patient the desk id
-            int vacDesk = aWorker.availableDesk();
+            int vacDesk = getVaccRoom().getAvailableDesk();
             reception.exitEnteringQueue(patient);// the patient leaves the reception room
             return vacDesk;                      // the id of its desk is returned
         }
@@ -213,6 +221,7 @@ public class Hospital {
     
     public void setObsRoom(ObservationRoom obsRoom){
         this.obsRoom = obsRoom;
+
     }
     
     public ArrayList<HcareWorker> getRestRoom(){
@@ -247,6 +256,16 @@ public class Hospital {
         return patient;
     }
     
+    public HashMap<Integer, Patient> getPatients(){
+        try
+        {
+            semPatients.acquire();
+        }catch(Exception e){}
+        HashMap<Integer, Patient> p = patients;
+        semPatients.release();
+        return p;
+    }
+    
     public String restRoomToString(){
         String text = "";
         for (HcareWorker worker : restRoom) {
@@ -258,6 +277,12 @@ public class Hospital {
     
     public CustomLogger getLogger(){
         return this.clogger;
+    }
+    
+    public void startWindow()
+    {
+        StringManager updater = new StringManager(this,this.window);
+        updater.start();
     }
     
 }

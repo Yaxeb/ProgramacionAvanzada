@@ -36,24 +36,21 @@ public class Patient extends Thread{
             
             try {
             // tengo que obtener el hcareworker que esté ahi
-                sleep(timeToGetDesk);
+                sleep(timeToGetDesk); //DUDAS CON ESTO
             } 
             catch (InterruptedException ex) 
             {
                 Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
             int obsDesk = hospital.enterVaccRoom(this, iDDesk);
-            
             try 
             {
-                sleep(timeToVaccine);
+                sleep(timeToVaccine); //DUDAS
             } 
             catch (InterruptedException ex)
             {
                 Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
             hospital.enterObservationRoom(this, obsDesk);
             
             try { 

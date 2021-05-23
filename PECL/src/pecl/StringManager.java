@@ -26,8 +26,11 @@ public class StringManager extends Thread{
      */
     public void textSetter(){
         //Reception
-        window.getReception().setText(hospital.getReception().allPatientsToString()); // Reception
-        window.getReceptionPatient().setText("P" + String.format("%04d", hospital.getReception().getWaitingQueue().get(0).getPid())); //Patient
+        //window.getReception().setText(hospital.getReception().allPatientsToString()); // Reception
+        window.getReception().setText(""+hospital.getReception().getEnteringQueue().size());
+        if (hospital.getReception().getWaitingQueue().size() > 0){
+            window.getReceptionPatient().setText("P" + String.format("%04d", hospital.getReception().getWaitingQueue().get(0).getPid())); //Patient
+        }
         if (hospital.getReception().getAuxWorker().isResting()) //Auxiliary
         {
             window.getReceptionAux().setText("");

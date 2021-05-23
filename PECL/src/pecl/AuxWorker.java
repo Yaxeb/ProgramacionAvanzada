@@ -1,6 +1,7 @@
 package pecl;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ public class AuxWorker extends Thread {
     private int counter; // current counter of items/patients attended
     private Hospital hospital;
     private boolean isResting;
+    private Semaphore semCounter = new Semaphore(1);
 
     public AuxWorker(int aid, int maximum, Hospital hospital) {
         this.aid = aid;
@@ -32,7 +34,7 @@ public class AuxWorker extends Thread {
              while (counter != 2000) { //total number of patients generated = 2000   
                  
 //                 enteringQueue = hospital.getReception().getEnteringQueue();
-                 waitingQueue = hospital.getReception().getWaitingQueue();
+/*                 waitingQueue = hospital.getReception().getWaitingQueue();
                  while (!waitingQueue.isEmpty()) 
                  {
                      patient = waitingQueue.get(0);
@@ -43,8 +45,8 @@ public class AuxWorker extends Thread {
 //                          enteringQueue.add(patient);
                      }
                      // check if there is a desk so the user will go.
-
-                     if (counter % maximum == 0)
+*/
+                     if (counter == maximum)
                      {
                           isResting = true;
                           try 
@@ -57,11 +59,12 @@ public class AuxWorker extends Thread {
                           }
                           finally 
                           {
+                              counter = 0;
                               isResting = false;
                           }  
                      }
                  }                
-            }
+            //}
         } 
         else 
         { // vaccination assistant
@@ -127,5 +130,14 @@ public class AuxWorker extends Thread {
     public boolean isResting(){
         return this.isResting;
     }
-    
+    public void addToCounter(){
+        try
+        {
+            semCounter.acquire();
+            counter++;
+        }catch(Exception e){}
+        finally{
+            semCounter.release();
+        }
+    }
 }

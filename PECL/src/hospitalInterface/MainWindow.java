@@ -8,31 +8,6 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
-        Hospital hospital = new Hospital(this);
-        Reception reception = new Reception(hospital);
-        VaccRoom vaccRoom = new VaccRoom(hospital);
-        ObservationRoom obsRoom = new ObservationRoom(hospital);
-        hospital.setReception(reception);
-        hospital.setVaccRoom(vaccRoom);
-        hospital.setObsRoom(obsRoom);
-        AuxWorker a1 = new AuxWorker(1,10,hospital);
-        hospital.getReception().setAuxWorker(a1);
-        a1.start();
-        AuxWorker a2 = new AuxWorker(2,20,hospital);
-        hospital.getVaccRoom().setAuxWorker(a2);
-        a2.start();
-        for (int i = 1; i<= 10; i++)
-        {
-            HcareWorker worker = new HcareWorker(i, 0,hospital);
-            worker.start();
-        }
-        
-        for(int i = 1; i <= 3; i++)
-        {
-            Patient patient = new Patient(i, hospital);
-            patient.start();
-        }
-        
     }
 
     /**

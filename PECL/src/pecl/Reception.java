@@ -14,12 +14,11 @@ public class Reception {
     private Semaphore enteringSemaphore;
     private Hospital hospital;
     
-    public Reception(Hospital hospital){
-        this.waitingQ = new ArrayList();
-        this.enteringQ = new ArrayList();
+    public Reception(){
+        this.waitingQ = new ArrayList<>();
+        this.enteringQ = new ArrayList<>();
         this.waitingSemaphore = new Semaphore(1);
-        this.enteringSemaphore = new Semaphore(1);
-        this.hospital = hospital;    
+        this.enteringSemaphore = new Semaphore(1);   
     }
     
 
@@ -72,7 +71,7 @@ public class Reception {
         }catch(Exception e){}
         finally
         {
-            waitingSemaphore.release();
+            enteringSemaphore.release();
         }
     }
     
@@ -89,7 +88,7 @@ public class Reception {
         }catch(Exception e){}
         finally
         {
-            waitingSemaphore.release();
+            enteringSemaphore.release();
         }
     }
     
@@ -99,16 +98,8 @@ public class Reception {
      * @return The Entering Queue
      */
     public ArrayList<Patient> getEnteringQueue(){
-        ArrayList<Patient> eQueue = new ArrayList<>();
-        try{
-            waitingSemaphore.acquire();
-            eQueue = this.enteringQ;
-        }catch(Exception e){}
-        finally
-        {
-            waitingSemaphore.release();
-        }
-        return eQueue;
+        return this.enteringQ;
+        
     }
     
     /**
@@ -118,16 +109,7 @@ public class Reception {
      * @return The Waiting queue
      */
     public ArrayList<Patient> getWaitingQueue(){
-        ArrayList<Patient> wQueue = new ArrayList<>();
-        try{
-            waitingSemaphore.acquire();
-            wQueue = this.waitingQ;
-        }catch(Exception e){}
-        finally
-        {
-            waitingSemaphore.release();
-        }
-        return wQueue;
+        return this.waitingQ;
     }
     
     public String allPatientsToString(){

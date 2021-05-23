@@ -9,25 +9,27 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class VaccRoom {
     private final AtomicInteger vaccines; 
-    private final ArrayList<Desk> desks;
+    private ArrayList<Desk> desks;
     private AuxWorker aWorker;
     private Lock desksLock;
     private Condition availableDesk;
-    private Hospital hospital;
     
     /**
      * This method initializes the object
      * @param hospital The hospital this room belongs to
      */
-    public VaccRoom(Hospital hospital) {
+    public VaccRoom() {
         
         this.vaccines = new AtomicInteger();
-        this.desks = new ArrayList(10);
-        this.hospital = hospital;
+        this.desks = new ArrayList<>(10);
+        for(int i = 0; i<10; i++)
+        {
+            this.desks.add(new Desk(i+1));
+        }
         this.desksLock = new ReentrantLock();
         this.availableDesk = desksLock.newCondition();
     }
-    
+
     /**
      * This method locates a patient into the desk with the ID given
      * It uses a lock to avoid data corruption and race conditions when
@@ -156,6 +158,17 @@ public class VaccRoom {
             desksLock.unlock();
         }
         return d;
+    }
+
+    public void setDesks(ArrayList<Desk> desks) {
+        ArrayList<Desk> d = new ArrayList<>();
+        try{
+            desksLock.lock();
+            this.desks = desks;
+        }catch(Exception e){}
+        finally{
+            desksLock.unlock();
+        }       
     }
 
     public AuxWorker getAuxWorker() {

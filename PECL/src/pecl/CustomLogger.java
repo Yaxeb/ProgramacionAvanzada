@@ -6,12 +6,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.locks.*;
 public class CustomLogger {
-
-    //private String path = "./Logs/EvolutionHospital.txt";
+    private Lock locj = new ReentrantLock();
+    private String path = "./Logs/EvolutionHospital.txt";
+    private BufferedWriter bw;
     
-    File path = new File("./Logs/EvolutionHospital.txt");
+    //File path = new File("./Logs/EvolutionHospital.txt");
     
 //    public synchronized void log(String message) {
 //        try {
@@ -23,23 +26,25 @@ public class CustomLogger {
 //            e.printStackTrace();
 //        }
 //    }
-    
-    
+
     public synchronized void log(String message) {
         try {
-            File fPath = new File("./Logs");
-            if (!fPath.exists()) {
-                fPath.mkdir();
-            }
-            FileWriter fw = new FileWriter(path);
-            try ( PrintWriter write = new PrintWriter(new BufferedWriter(fw))) {
-                write.println(message);
-                write.println("\n");
-
-            }
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(CustomLogger.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            this.bw = new BufferedWriter(new FileWriter(path));
+        }catch(Exception e){
+            System.out.println("Error");
+        }
+    }
+    
+    public void write(String line, String room)
+    {
+        try
+        {
+            String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("[MM-dd-yyyy][HH:mm:ss]"));
+            bw.write(time + " | " + room + " --- " + line);
+            bw.newLine();
+            bw.flush();
+        }catch(Exception e){
+            System.out.println("Error");
         }
     }
 }

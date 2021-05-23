@@ -12,11 +12,12 @@ public class PECL {
         Hospital hospital = new Hospital(reception, vaccRoom, obsRoom, window);
         AuxWorker a1 = new AuxWorker(1,10,hospital);
         hospital.getReception().setAuxWorker(a1);
+        hospital.startWindow();
         a1.start();
         AuxWorker a2 = new AuxWorker(2,20,hospital);
         hospital.getVaccRoom().setAuxWorker(a2);
         a2.start();
-        hospital.startWindow();
+        
         for (int i = 1; i<= 10; i++)
         {
             HcareWorker worker = new HcareWorker(i, 0,hospital);

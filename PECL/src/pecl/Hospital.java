@@ -54,29 +54,7 @@ public class Hospital {
             }
             catch(Exception e){}
         }
-        if (patient.hasAppointment()){
-            reception.exitWaitingQueue(patient);
-            reception.getAuxWorker().addToCounter();
-            reception.enterEnteringQueue(patient);
-            System.out.println("Fiesta");
-            //If there is any available desk
-            try
-            {
-                semEnterVacc.acquire();
-            }
-            catch(Exception e){}
-            //auxworker tells patient the desk id
-            int vacDesk = getVaccRoom().getAvailableDesk();
-            reception.exitEnteringQueue(patient);// the patient leaves the reception room
-            return vacDesk;                      // the id of its desk is returned
-        }
-        else
-        {
-            reception.exitWaitingQueue(patient); //the patient didn't have an appointment
-            removePatient(patient);              // so it leaves the hospital
-            return 0;                           
-            
-        }
+        return aWorker.availableDesk(patient);
         /*
         hablar con el asistente y mirar si está en lista...
         Si está en lista se va a la enteringQ y sigue normal, return el numero de la mesa

@@ -13,6 +13,7 @@ public class VaccRoom {
     private AuxWorker aWorker;
     private Lock desksLock;
     private Condition availableDesk;
+    private Semaphore semDesks = new Semaphore(10);
     
     /**
      * This method initializes the object
@@ -66,11 +67,11 @@ public class VaccRoom {
             Desk d = desks.get(iDDesk-1);
             d.setPatient(-1);
             desks.set(iDDesk-1, d);
-            availableDesk.signal();
+            semDesks.release();
         }catch(Exception e){}
-        finally{
-            desksLock.unlock();
-        }
+       // finally{
+       //     desksLock.unlock();
+       // }
     }
     
     /**
@@ -88,32 +89,30 @@ public class VaccRoom {
     public int getAvailableDesk(){
         int i = 0;
         try{
-            desksLock.lock();
+            semDesks.acquire();
+            //desksLock.lock();
             boolean found = false;
             while(!found)
             {
-                i = 0;
-                while (i < desks.size() && !found)
+                
+                if (i >= desks.size() -1 )
                 {
-                    Desk d = desks.get(i);
-                    if(d.getPatient() == -1 && d.getWorker() != -1)
-                    {//the desk has a worker and no patients
-                        found = true;
-                    }
+                    i = 0;
+                }
+                Desk d = desks.get(i);
+                if(d.getPatient() == -1 && d.getWorker() != -1)
+                {//the desk has a worker and no patients
+                    found = true;
+                    d.setPatient(0); //We reserve the desk
+                }
                 i++; //we do it regardless, because the desk's ID is id+1, so even if
                      // we have found the first available desk, we still need to add 1
-                }
-                if (!found){
-                    try{
-                    availableDesk.await();
-                    }catch(Exception e){}
-                }
             }
         }catch(Exception e){}
-        finally
-        {
-            desksLock.unlock();
-        }
+        //finally
+        //{
+            //desksLock.unlock();
+        //}
         return i;
     }
     
@@ -149,15 +148,7 @@ public class VaccRoom {
      * @return An ArrayList containing all desks from the Vaccination Room
      */
     public ArrayList<Desk> getDesks(){
-        ArrayList<Desk> d = new ArrayList<>();
-        try{
-            desksLock.lock();
-            d = this.desks;
-        }catch(Exception e){}
-        finally{
-            desksLock.unlock();
-        }
-        return d;
+        return this.desks;
     }
 
     public void setDesks(ArrayList<Desk> desks) {

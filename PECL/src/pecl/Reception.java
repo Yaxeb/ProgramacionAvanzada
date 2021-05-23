@@ -3,6 +3,8 @@ package pecl;
 import java.util.ArrayList;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Reception {
     // listas para imprimirlos...
@@ -13,6 +15,8 @@ public class Reception {
     private Semaphore waitingSemaphore;
     private Semaphore enteringSemaphore;
     private Hospital hospital;
+    private Lock wLock = new ReentrantLock();
+    private Lock eLock = new ReentrantLock();
     
     public Reception(){
         this.waitingQ = new ArrayList<>();
@@ -30,13 +34,15 @@ public class Reception {
      */
     public synchronized void enterWaitingQueue(Patient patient){
         try{
-            waitingSemaphore.acquire();
+            wLock.lock();
+            //waitingSemaphore.acquire();
             waitingQ.add(patient);
-            patient.wait();
+            System.out.println("EntraWaiting");
         }catch(Exception e){}
         finally
         {
-            waitingSemaphore.release();
+            wLock.unlock();
+            //waitingSemaphore.release();
         } 
     }
     
@@ -48,13 +54,15 @@ public class Reception {
      */
     public synchronized void exitWaitingQueue(Patient patient){
         try{
-            waitingSemaphore.acquire();
-            patient.notify();
+            wLock.lock();
+            //waitingSemaphore.acquire();
             waitingQ.remove(patient);
+            System.out.println("SaleWaiting");
         }catch(Exception e){}
         finally
         {
-            waitingSemaphore.release();
+            wLock.unlock();
+            //waitingSemaphore.release();
         }
     }
     
@@ -65,13 +73,15 @@ public class Reception {
      */
     public synchronized void enterEnteringQueue(Patient patient){
         try{
-            enteringSemaphore.acquire();
+            eLock.lock();
+            //enteringSemaphore.acquire();
             enteringQ.add(patient);
-            patient.wait();
+            System.out.println("EntraEnter");
         }catch(Exception e){}
         finally
         {
-            enteringSemaphore.release();
+            eLock.unlock();
+            //enteringSemaphore.release();
         }
     }
     
@@ -82,13 +92,15 @@ public class Reception {
      */
     public synchronized void exitEnteringQueue(Patient patient){
         try{
-            enteringSemaphore.acquire();
-            patient.notify();
+            eLock.lock();
+            //enteringSemaphore.acquire();
             enteringQ.remove(patient);
+            System.out.println("SaleEntering");
         }catch(Exception e){}
         finally
         {
-            enteringSemaphore.release();
+            eLock.unlock();
+            //enteringSemaphore.release();
         }
     }
     

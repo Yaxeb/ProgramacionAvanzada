@@ -46,7 +46,7 @@ public class AuxWorker extends Thread {
                      }
                      // check if there is a desk so the user will go.
 */
-                     if (counter == maximum)
+                     if (counter >= maximum)
                      {
                           isResting = true;
                           try 
@@ -59,7 +59,7 @@ public class AuxWorker extends Thread {
                           }
                           finally 
                           {
-                              counter = 0;
+                              resetCounter();
                               isResting = false;
                           }  
                      }
@@ -75,13 +75,15 @@ public class AuxWorker extends Thread {
                 {
                     sleep(500 + (int) (Math.random() * 501));
                     hospital.getVaccRoom().createVaccine();
+                    addToCounter();
                 } 
                 catch (InterruptedException ex) 
                 {
                     Logger.getLogger(AuxWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (counter % maximum == 0)
+                if (counter >= maximum)
                 {
+                    isResting = true;
                     try 
                     {
                         sleep(1000 + (int) (Math.random() * 4001));
@@ -89,6 +91,11 @@ public class AuxWorker extends Thread {
                     catch (InterruptedException ex) 
                     {
                         Logger.getLogger(AuxWorker.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    finally
+                    {
+                        resetCounter();
+                        isResting = false;
                     }
                 }
             }
@@ -101,11 +108,10 @@ public class AuxWorker extends Thread {
         }
     }
     
-    public synchronized int availableDesk(){
-        ArrayList<Patient> enteringQueue = hospital.getReception().getEnteringQueue();
-        int nrDesk = hospital.getVaccRoom().getAvailableDesk();
+    public synchronized int availableDesk(Patient patient){
+       /* int nrDesk = hospital.getVaccRoom().getAvailableDesk();
         int timeToSleep = 500 + (int) (Math.random() * 500);
-        enteringQueue.get(0).setTimeToGetDesk(aid);
+        patient.setTimeToGetDesk(timeToSleep);
         
         try 
         {   // checking the desk
@@ -115,7 +121,35 @@ public class AuxWorker extends Thread {
         {
             Logger.getLogger(AuxWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return nrDesk;
+        return nrDesk;*/
+        
+        if (patient.hasAppointment()){
+            hospital.getReception().exitWaitingQueue(patient);
+            hospital.getReception().getAuxWorker().addToCounter();
+            int timeToSleep = 500 + (int) (Math.random() * 500);
+            patient.setTimeToGetDesk(timeToSleep);
+            try 
+            {   // checking the desk
+            AuxWorker.sleep(timeToSleep);
+            }
+            catch (InterruptedException ex) 
+            {
+            Logger.getLogger(AuxWorker.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            hospital.getReception().enterEnteringQueue(patient);
+            //If there is any available desk
+            //auxworker tells patient the desk id
+            int vacDesk = hospital.getVaccRoom().getAvailableDesk();
+            hospital.getReception().exitEnteringQueue(patient);// the patient leaves the reception room
+            return vacDesk;                                    // the id of its desk is returned
+        }
+        else
+        {
+            hospital.getReception().exitWaitingQueue(patient); //the patient didn't have an appointment
+            hospital.removePatient(patient);              // so it leaves the hospital
+            return 0;                           
+            
+        }
     }
 
     public int getAid() {
@@ -130,6 +164,18 @@ public class AuxWorker extends Thread {
     public boolean isResting(){
         return this.isResting;
     }
+    
+    public void resetCounter(){
+        try
+        {
+            semCounter.acquire();
+            counter=0;
+        }catch(Exception e){}
+        finally{
+            semCounter.release();
+        }
+    }
+    
     public void addToCounter(){
         try
         {

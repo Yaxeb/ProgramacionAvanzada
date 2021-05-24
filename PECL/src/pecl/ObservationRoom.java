@@ -7,7 +7,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ObservationRoom {
-    ArrayList<Desk> desks;
+    private ArrayList<Desk> desks;
     private Lock desksLock;
     private Condition availableDesk;
     

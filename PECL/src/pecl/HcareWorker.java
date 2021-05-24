@@ -68,7 +68,6 @@ public class HcareWorker extends Thread{
             {
                 lock.unlock();
             }
-            
         }
         else 
         {
@@ -83,32 +82,42 @@ public class HcareWorker extends Thread{
         }
         
         try {
-            System.out.println("Mequierosentar");
-             lock.lock();
-             desksVaccRoom = hospital.getVaccRoom().getDesks();
-             
+           // System.out.println("Mequierosentar");
+             System.out.println("HcareWorker " + hid + " entered ");
+             //lock.lock();
+             desksVaccRoom = hospital.getVaccRoom().getDesks(); // metodo sincronizado. 
              // sitting in a post. 
+             
+             int i = 1;
              while (iDDeskVacc == -1)
              {
-                int i = 1;
-                while (i <= desksVaccRoom.size() && iDDeskVacc == -1) 
+              //  System.out.println("ejecucion del while primero: id hcare =  " + hid);
+                 System.out.println("valor de la i " + i + ", que ve el usuario: " + hid);
+                if (i >= desksVaccRoom.size() + 1) 
                 {
-                    Desk desk = desksVaccRoom.get(i-1);
-                    if (desk.getWorker() == -1)
-                    {
-                            desk.setWorker(hid);
-                            desksVaccRoom.set(i, desk);
-                            iDDeskVacc = i;
-                            System.out.println("Me siento");
-                            hospital.getVaccRoom().setDesks(desksVaccRoom);
-                    }
+                  //  System.out.println("ejecucion del bucle while por worker: " + hid);
+                    i = 1; 
                 }
+              
+                Desk desk = desksVaccRoom.get(i-1);
+                if (desk.getWorker() == -1)
+                {
+                    
+                        desk.setWorker(hid);
+                        desksVaccRoom.set(i-1, desk);
+                        iDDeskVacc = i;
+                        System.out.println("iDDesk: " + iDDeskVacc);
+                        //System.out.println("iDDesk: " + iDDeskVacc);
+                        //System.out.println("Me siento");
+                        hospital.getVaccRoom().setDesks(desksVaccRoom);
+                }
+                i++;                
              }
         }
         catch(Exception e){}
         finally
         {
-            lock.unlock();
+            //lock.unlock();
         }
         try
         {

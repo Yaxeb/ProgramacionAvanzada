@@ -147,7 +147,7 @@ public class VaccRoom {
      * This method returns all the desks from the Vaccination Room
      * @return An ArrayList containing all desks from the Vaccination Room
      */
-    public ArrayList<Desk> getDesks(){
+    public synchronized ArrayList<Desk> getDesks(){
         return this.desks;
     }
 

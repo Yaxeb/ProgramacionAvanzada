@@ -120,14 +120,15 @@ public class HcareWorker extends Thread{
         System.out.println("LANDMARK 1");
         try
         {
-            //lock.lock();
+             lock.lock();
              desksVaccRoom = hospital.getVaccRoom().getDesks();
              while (desksVaccRoom.get(iDDeskVacc - 1).getPatient() == -1) 
              {
-                 working = false;
-                 noWorkToDo.await();
+                  working = false;
+                  System.out.println("claro chavalote, nadie te despierta...");
+                  noWorkToDo.await();
+                  
              }
-
              // Worker has work to do (vaccinate patient). 
              working = true;
              isVaccinating = true;
@@ -164,7 +165,7 @@ public class HcareWorker extends Thread{
         }
         finally
         {
-            //lock.unlock();
+            lock.unlock();
         }
              // checking if any patient is requesting help due to complications
              while (!hospital.getObsRoom().checkComplications(hospital.getPatients()).isEmpty()) {
@@ -173,11 +174,10 @@ public class HcareWorker extends Thread{
                  desksObsRoom = hospital.getObsRoom().getDesks();
                  desksVaccRoom = hospital.getVaccRoom().getDesks();
                  iDDeskObs = hospital.getObsRoom().checkComplications(hospital.getPatients()).get(0);
-                 iDDeskVacc = -1;
                  desksVaccRoom.get(iDDeskVacc).setWorker(-1);
                  desksObsRoom.get(iDDeskObs).setWorker(hid);
                  hospital.getObsRoom().checkComplications(hospital.getPatients()).remove(0);
-                 
+                 iDDeskVacc = -1;
                  int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
                  timeWithComplications = 2000 + (int) Math.random() * 3001;
                  hospital.getPatient(idPatient).setTimeWithComplications(timeWithComplications);
@@ -200,8 +200,13 @@ public class HcareWorker extends Thread{
      * Method which signalls if the HcareWorker has work to do.
      * 
      */
-    public synchronized void signalNoWorkToDo(){
-        noWorkToDo.signal(); // puede dar illegal monitor exception, ver si sucede o no.
+    public void signalNoWorkToDo(){
+        lock.lock();
+        try {
+            noWorkToDo.signal(); // puede dar illegal monitor exception, ver si sucede o no.
+        } finally {
+            lock.unlock();
+        }
     }
 
     public boolean isVaccinating() {

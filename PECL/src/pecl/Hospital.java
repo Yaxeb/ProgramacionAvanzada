@@ -82,7 +82,7 @@ public class Hospital {
     
     
     public int enterVaccRoom(Patient patient, int iDDesk){
-        vaccRoom.sitPatient(patient, iDDesk);
+        vaccRoom.sitPatient(patient, iDDesk, hcareWorkers);
         vaccRoom.vaccinate(patient, hcareWorkers.get(getVaccRoom().getDesks().get(iDDesk-1).getWorker()));
         try //we try to enter the observation room
         {                            

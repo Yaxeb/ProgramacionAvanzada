@@ -1,6 +1,7 @@
 package pecl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
@@ -45,10 +46,11 @@ public class VaccRoom {
      * @param patient The patient who's going to sit in the desk
      * @param iDDesk The ID of the desk
      */
-    public synchronized void sitPatient(Patient patient, int iDDesk){
+    public synchronized void sitPatient(Patient patient, int iDDesk, HashMap<Integer ,HcareWorker> workers){
         Desk d = desks.get(iDDesk-1);
         d.setPatient(patient.getPid());
         desks.set(iDDesk-1, d);
+        workers.get(d.getWorker()).signalNoWorkToDo();
     }
     
     /**

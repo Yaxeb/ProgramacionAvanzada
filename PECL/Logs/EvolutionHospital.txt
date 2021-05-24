@@ -1,40 +1,55 @@
-05-24-202103:33:54 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:33:58 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:33:58 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:03 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:03 | Reception --- Patient P0001 in desk 1controlled by 8
-05-24-202103:34:04 | Reception --- Patient P0003 in desk 2controlled by 1
-05-24-202103:34:04 | Observation Room --- Patient P0001 in desk 1controlled by -1
-05-24-202103:34:05 | Reception --- Patient P0004 in desk 1controlled by 8
-05-24-202103:34:05 | Reception --- Patient P0005 in desk 3controlled by 3
-05-24-202103:34:06 | Reception --- Patient P0006 in desk 4controlled by 6
-05-24-202103:34:07 | Reception --- Patient P0007 in desk 5controlled by 10
-05-24-202103:34:07 | Reception --- Patient P0008 in desk 6controlled by 2
-05-24-202103:34:08 | Reception --- Patient P0002 in desk 7controlled by 7
-05-24-202103:34:09 | Vaccination Room --- Auxiliary A2 begins his rest
-05-24-202103:34:09 | Reception --- Patient P0009 in desk 8controlled by 4
-05-24-202103:34:09 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:11 | Vaccination Room --- Auxiliary A2 ends his rest
-05-24-202103:34:13 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:13 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:13 | Reception --- Patient P0010 in desk 9controlled by 9
-05-24-202103:34:14 | Observation Room --- Patient P0001 exits the hospital
-05-24-202103:34:17 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:17 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:22 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:22 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:26 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:26 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:27 | Vaccination Room --- Auxiliary A2 begins his rest
-05-24-202103:34:30 | Vaccination Room --- Auxiliary A2 ends his rest
-05-24-202103:34:31 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:31 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:34 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:34 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:38 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:38 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:42 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:42 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:45 | Reception --- Auxiliary A1 ends his rest
-05-24-202103:34:45 | Reception --- Auxiliary A1 begins his rest
-05-24-202103:34:46 | Vaccination Room --- Auxiliary A2 begins his rest
+05-24-202103:43:00 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:04 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:04 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:07 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:07 | Reception --- Patient P0001 in desk 1controlled by 2
+05-24-202103:43:08 | Reception --- Patient P0002 in desk 2controlled by 8
+05-24-202103:43:08 | Observation Room --- Patient P0001 in desk 1controlled by -1
+05-24-202103:43:09 | Observation Room --- Patient P0002 in desk 2controlled by -1
+05-24-202103:43:09 | Reception --- Patient P0004 in desk 1controlled by 2
+05-24-202103:43:10 | Reception --- Patient P0005 in desk 2controlled by 8
+05-24-202103:43:10 | Observation Room --- Patient P0004 in desk 3controlled by -1
+05-24-202103:43:10 | Reception --- Patient P0006 in desk 1controlled by 2
+05-24-202103:43:11 | Observation Room --- Patient P0005 in desk 4controlled by -1
+05-24-202103:43:11 | Reception --- Patient P0007 in desk 2controlled by 8
+05-24-202103:43:11 | Observation Room --- Patient P0006 in desk 5controlled by -1
+05-24-202103:43:12 | Observation Room --- Patient P0007 in desk 6controlled by -1
+05-24-202103:43:12 | Reception --- Patient P0003 in desk 1controlled by 2
+05-24-202103:43:12 | Observation Room --- Patient P0003 in desk 7controlled by -1
+05-24-202103:43:13 | Reception --- Patient P0008 in desk 1controlled by 2
+05-24-202103:43:13 | Reception --- Patient P0010 in desk 2controlled by 8
+05-24-202103:43:13 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:13 | Observation Room --- Patient P0008 in desk 8controlled by -1
+05-24-202103:43:14 | Observation Room --- Patient P0010 in desk 9controlled by -1
+05-24-202103:43:15 | Vaccination Room --- Auxiliary A2 begins his rest
+05-24-202103:43:16 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:16 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:16 | Reception --- Patient P0009 in desk 1controlled by 2
+05-24-202103:43:17 | Observation Room --- Patient P0009 in desk 10controlled by -1
+05-24-202103:43:18 | Observation Room --- Patient P0001 exits the hospital
+05-24-202103:43:18 | Vaccination Room --- Auxiliary A2 ends his rest
+05-24-202103:43:19 | Observation Room --- Patient P0002 exits the hospital
+05-24-202103:43:20 | Observation Room --- Patient P0004 exits the hospital
+05-24-202103:43:21 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:21 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:21 | Observation Room --- Patient P0005 exits the hospital
+05-24-202103:43:21 | Observation Room --- Patient P0006 exits the hospital
+05-24-202103:43:22 | Observation Room --- Patient P0007 exits the hospital
+05-24-202103:43:22 | Observation Room --- Patient P0003 exits the hospital
+05-24-202103:43:23 | Observation Room --- Patient P0008 exits the hospital
+05-24-202103:43:24 | Observation Room --- Patient P0010 exits the hospital
+05-24-202103:43:24 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:24 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:27 | Observation Room --- Patient P0009 exits the hospital
+05-24-202103:43:28 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:28 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:33 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:33 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:34 | Vaccination Room --- Auxiliary A2 begins his rest
+05-24-202103:43:36 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:36 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:37 | Vaccination Room --- Auxiliary A2 ends his rest
+05-24-202103:43:39 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:39 | Reception --- Auxiliary A1 begins his rest
+05-24-202103:43:43 | Reception --- Auxiliary A1 ends his rest
+05-24-202103:43:43 | Reception --- Auxiliary A1 begins his rest

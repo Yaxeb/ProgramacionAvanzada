@@ -132,13 +132,10 @@ public class AuxWorker extends Thread {
         return nrDesk;*/
         
         if (patient.hasAppointment()){
-            System.out.println("tralala");
             hospital.getReception().exitWaitingQueue(patient);
             hospital.getReception().getAuxWorker().addToCounter();
             int timeToSleep = 500 + (int) (Math.random() * 500);
-            System.out.println("aqui creo que dara problemas");
             patient.setTimeToGetDesk(timeToSleep);
-            System.out.println("estuve en lo cierto?");
             try 
             {   // checking the desk
                 AuxWorker.sleep(timeToSleep);

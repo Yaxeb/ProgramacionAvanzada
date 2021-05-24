@@ -38,16 +38,10 @@ public class VaccRoom {
      * @param patient The patient who's going to sit in the desk
      * @param iDDesk The ID of the desk
      */
-    public void sitPatient(Patient patient, int iDDesk){
-        try{
-            desksLock.lock();
-            Desk d = desks.get(iDDesk-1);
-            d.setPatient(patient.getPid());
-            desks.set(iDDesk-1, d);
-        }catch(Exception e){}
-        finally{
-            desksLock.unlock();
-        }
+    public synchronized void sitPatient(Patient patient, int iDDesk){
+        Desk d = desks.get(iDDesk-1);
+        d.setPatient(patient.getPid());
+        desks.set(iDDesk-1, d);
     }
     
     /**

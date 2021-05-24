@@ -83,8 +83,6 @@ public class Hospital {
     
     public int enterVaccRoom(Patient patient, int iDDesk){
         vaccRoom.sitPatient(patient, iDDesk);
-        //communication between the worker and the patient to know the 
-        //duration of the vaccine
         try //we try to enter the observation room
         {                            
              semEnterObs.acquire();

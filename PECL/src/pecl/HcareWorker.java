@@ -83,7 +83,7 @@ public class HcareWorker extends Thread{
         
         try {
            // System.out.println("Mequierosentar");
-             System.out.println("HcareWorker " + hid + " entered ");
+            // System.out.println("HcareWorker " + hid + " entered ");
              //lock.lock();
              desksVaccRoom = hospital.getVaccRoom().getDesks(); // metodo sincronizado. 
              // sitting in a post. 

@@ -29,8 +29,6 @@ public class AuxWorker extends Thread {
     public void run() {
         // reception assistant
         Patient patient;
-        ArrayList<Patient> enteringQueue;
-        ArrayList<Patient> waitingQueue;
         if (aid == 1) 
         {
              while (counter != 2000) { //total number of patients generated = 2000   
@@ -49,7 +47,8 @@ public class AuxWorker extends Thread {
                      // check if there is a desk so the user will go.
 */
                      if (counter % maximum == 0)
-                     {
+                     {  
+                          System.out.println("entering queue size: " + hospital.getReception().getEnteringQueue().size());
                           System.out.println("Auxiliary A1 begins his rest");
                           hospital.getClogger().write("Auxiliary A1 begins his rest", "Reception");
                           isResting = true;
@@ -66,8 +65,9 @@ public class AuxWorker extends Thread {
                               System.out.println("Auxiliary A1 ends his rest");
                               hospital.getClogger().write("Auxiliary A1 ends his rest", "Reception");
                               isResting = false;
-                          }  
+                         }  
                      }
+                     hospital.getReception().getNextPatient();
                  }                
             //}
         } 
@@ -132,10 +132,13 @@ public class AuxWorker extends Thread {
         return nrDesk;*/
         
         if (patient.hasAppointment()){
+            System.out.println("tralala");
             hospital.getReception().exitWaitingQueue(patient);
             hospital.getReception().getAuxWorker().addToCounter();
             int timeToSleep = 500 + (int) (Math.random() * 500);
+            System.out.println("aqui creo que dara problemas");
             patient.setTimeToGetDesk(timeToSleep);
+            System.out.println("estuve en lo cierto?");
             try 
             {   // checking the desk
                 AuxWorker.sleep(timeToSleep);
@@ -153,15 +156,13 @@ public class AuxWorker extends Thread {
         }
         else
         {
-            
-            
             hospital.getReception().exitWaitingQueue(patient); //the patient didn't have an appointment
             hospital.removePatient(patient);              // so it leaves the hospital
             return 0;                           
             
         }
     }
-
+    
     public int getAid() {
         return aid;
     }

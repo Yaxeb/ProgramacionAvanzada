@@ -92,7 +92,6 @@ public class HcareWorker extends Thread{
              while (iDDeskVacc == -1)
              {
               //  System.out.println("ejecucion del while primero: id hcare =  " + hid);
-                 System.out.println("valor de la i " + i + ", que ve el usuario: " + hid);
                 if (i >= desksVaccRoom.size() + 1) 
                 {
                   //  System.out.println("ejecucion del bucle while por worker: " + hid);
@@ -102,13 +101,10 @@ public class HcareWorker extends Thread{
                 Desk desk = desksVaccRoom.get(i-1);
                 if (desk.getWorker() == -1)
                 {
-                    
                         desk.setWorker(hid);
                         desksVaccRoom.set(i-1, desk);
                         iDDeskVacc = i;
-                        System.out.println("iDDesk: " + iDDeskVacc);
                         //System.out.println("iDDesk: " + iDDeskVacc);
-                        //System.out.println("Me siento");
                         hospital.getVaccRoom().setDesks(desksVaccRoom);
                 }
                 i++;                
@@ -123,7 +119,7 @@ public class HcareWorker extends Thread{
         {
             lock.lock();
              desksVaccRoom = hospital.getVaccRoom().getDesks();
-             while (desksVaccRoom.get(iDDeskVacc).getPatient() == -1) 
+             while (desksVaccRoom.get(iDDeskVacc - 1).getPatient() == -1) 
              {
                  working = false;
                  noWorkToDo.await();

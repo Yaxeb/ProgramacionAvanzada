@@ -50,6 +50,7 @@ public class Hospital {
         while(aWorker.isResting()){ //if the recepcionist is on break, the 
             try
             {                    //patient will wait until it comes back
+                System.out.println("el print, paciente esperando con id " + patient.getPid());
                 wait();
             }
             catch(Exception e){}
@@ -191,7 +192,7 @@ public class Hospital {
         salir del hospital
         */
     }
-    
+        
     public VaccRoom getVaccRoom(){
         return this.vaccRoom;
     }

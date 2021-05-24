@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Reception {
     // listas para imprimirlos...
@@ -33,17 +35,15 @@ public class Reception {
      * @param patient The patient entering the hospital
      */
     public synchronized void enterWaitingQueue(Patient patient){
-        try{
-            wLock.lock();
+
             //waitingSemaphore.acquire();
             waitingQ.add(patient);
-           // System.out.println("EntraWaiting");
-        }catch(Exception e){}
-        finally
-        {
-            wLock.unlock();
-            //waitingSemaphore.release();
-        } 
+        try {
+            wait();
+            // System.out.println("EntraWaiting");
+        } catch (InterruptedException ex) { }
+        
+        
     }
     
     /**
@@ -53,17 +53,9 @@ public class Reception {
      * @param patient  The patient exiting the waiting queue
      */
     public synchronized void exitWaitingQueue(Patient patient){
-        try{
-            wLock.lock();
             //waitingSemaphore.acquire();
             waitingQ.remove(patient);
         //    System.out.println("SaleWaiting");
-        }catch(Exception e){}
-        finally
-        {
-            wLock.unlock();
-            //waitingSemaphore.release();
-        }
     }
     
     /**
@@ -72,17 +64,12 @@ public class Reception {
      * @param patient The patient waiting to enter the vaccination room
      */
     public synchronized void enterEnteringQueue(Patient patient){
-        try{
-            eLock.lock();
             //enteringSemaphore.acquire();
             enteringQ.add(patient);
-           // System.out.println("EntraEnter");
-        }catch(Exception e){}
-        finally
-        {
-            eLock.unlock();
-            //enteringSemaphore.release();
-        }
+        try {
+            wait();
+            // System.out.println("EntraEnter");
+        } catch (InterruptedException ex) {}
     }
     
     /**
@@ -91,17 +78,12 @@ public class Reception {
      * @param patient The patient waiting to enter the vaccination room
      */
     public synchronized void exitEnteringQueue(Patient patient){
-        try{
-            eLock.lock();
-            //enteringSemaphore.acquire();
             enteringQ.remove(patient);
           //  System.out.println("SaleEntering");
-        }catch(Exception e){}
-        finally
-        {
-            eLock.unlock();
-            //enteringSemaphore.release();
-        }
+    }
+    
+    public synchronized void getNextPatient(){
+        notify();
     }
     
     /**
@@ -111,7 +93,6 @@ public class Reception {
      */
     public ArrayList<Patient> getEnteringQueue(){
         return this.enteringQ;
-        
     }
     
     /**

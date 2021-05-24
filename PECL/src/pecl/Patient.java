@@ -19,7 +19,7 @@ public class Patient extends Thread{
      */
     public Patient(int pid, Hospital hospital) {
         this.pid = pid;
-        this.randomChance = (int) (Math.random() * 101);
+        this.randomChance = 2; //(int) (Math.random() * 101);
         this.timeWithComplications = 0;
         this.hospital = hospital;
        // this.clogger = hospital.getLogger();

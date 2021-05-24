@@ -161,6 +161,7 @@ public class HcareWorker extends Thread{
         }
              // checking if any patient is requesting help due to complications
              while (!hospital.getObsRoom().checkComplications(hospital.getPatients()).isEmpty()) {
+                 System.out.println("COMPLICATIONS APPEARED! ");
                  lock.lock();
                  desksObsRoom = hospital.getObsRoom().getDesks();
                  desksVaccRoom = hospital.getVaccRoom().getDesks();

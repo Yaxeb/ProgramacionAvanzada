@@ -25,7 +25,7 @@ public class PECL {
             hospital.addWorker(worker);
             worker.start();
         }
-        for(int i = 1; i <= 10; i++)
+        for(int i = 1; i <= 100; i++)
         {
             Patient patient = new Patient(i, hospital);
             patient.start();

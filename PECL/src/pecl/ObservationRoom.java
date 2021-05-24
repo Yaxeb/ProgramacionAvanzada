@@ -90,8 +90,7 @@ public class ObservationRoom {
                     {//the desk has a worker and no patients
                         found = true;
                     }
-                i++; //we do it regardless, because the desk's ID is id+1, so even if
-                     // we have found the first available desk, we still need to add 1
+                i++; 
                 }
                 if (!found){
                     try{

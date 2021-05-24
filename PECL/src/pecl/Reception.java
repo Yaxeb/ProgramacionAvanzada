@@ -5,12 +5,8 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Reception {
-    // listas para imprimirlos...
-
     private final ArrayList<Patient> waitingQ; 
     private AuxWorker auxWorker1;
     private final ArrayList<Patient> enteringQ;
@@ -53,9 +49,7 @@ public class Reception {
      * @param patient  The patient exiting the waiting queue
      */
     public synchronized void exitWaitingQueue(Patient patient){
-            //waitingSemaphore.acquire();
             waitingQ.remove(patient);
-        //    System.out.println("SaleWaiting");
     }
     
     /**
@@ -64,11 +58,9 @@ public class Reception {
      * @param patient The patient waiting to enter the vaccination room
      */
     public synchronized void enterEnteringQueue(Patient patient){
-            //enteringSemaphore.acquire();
             enteringQ.add(patient);
         try {
             wait();
-            // System.out.println("EntraEnter");
         } catch (InterruptedException ex) {}
     }
     
@@ -79,7 +71,6 @@ public class Reception {
      */
     public synchronized void exitEnteringQueue(Patient patient){
             enteringQ.remove(patient);
-          //  System.out.println("SaleEntering");
     }
     
     public synchronized void getNextPatient(){

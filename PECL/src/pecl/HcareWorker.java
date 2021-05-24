@@ -35,7 +35,7 @@ public class HcareWorker extends Thread{
         this.pVaccinated = pVaccinated;
         this.hospital = hospital;
         this.beenAwaken = false;
-        this.maximum = 15;
+        this.maximum = 2;
         this.lock = new ReentrantLock();
         this.noWorkToDo = lock.newCondition();
         this.working = false;
@@ -84,32 +84,25 @@ public class HcareWorker extends Thread{
         }
         
         try {
-           // System.out.println("Mequierosentar");
-            // System.out.println("HcareWorker " + hid + " entered ");
-             //lock.lock();
-             desksVaccRoom = hospital.getVaccRoom().getDesks(); // metodo sincronizado. 
-             // sitting in a post. 
+             desksVaccRoom = hospital.getVaccRoom().getDesks(); 
              
              int i = 1;
              while (iDDeskVacc == -1)
              {
-              //  System.out.println("ejecucion del while primero: id hcare =  " + hid);
                 if (i >= desksVaccRoom.size() + 1) 
                 {
-                  //  System.out.println("ejecucion del bucle while por worker: " + hid);
                     i = 1; 
                 }
               
                 Desk desk = desksVaccRoom.get(i-1);
                 if (desk.getWorker() == -1)
                 {
-                        desk.setWorker(hid);
-                        desksVaccRoom.set(i-1, desk);
-                        iDDeskVacc = i;
-                        //System.out.println("iDDesk: " + iDDeskVacc);
-                        hospital.getVaccRoom().setDesks(desksVaccRoom);
+                    desk.setWorker(hid);
+                    desksVaccRoom.set(i-1, desk);
+                    iDDeskVacc = i;
+                    hospital.getVaccRoom().setDesks(desksVaccRoom);
                 }
-                i++;                
+                i++;
              }
         }
         catch(Exception e){}
@@ -117,7 +110,6 @@ public class HcareWorker extends Thread{
         {
             //lock.unlock();
         }
-        System.out.println("LANDMARK 1");
         try
         {
              lock.lock();
@@ -125,19 +117,19 @@ public class HcareWorker extends Thread{
              while (desksVaccRoom.get(iDDeskVacc - 1).getPatient() == -1) 
              {
                   working = false;
-                  System.out.println("claro chavalote, nadie te despierta...");
                   noWorkToDo.await();
                   
              }
              // Worker has work to do (vaccinate patient). 
              working = true;
+             
              isVaccinating = true;
              timeToVaccine = 3000 + (int) Math.random() * 2000;
-             sleep(timeToVaccine);
+             sleep(timeToVaccine); // vaccinating
              int pid = desksVaccRoom.get(iDDeskVacc-1).getPatient();
-             System.out.println("Antes de notificar la vacuna");
+             isVaccinating = false;
+             
              hospital.getVaccRoom().notifyVaccine(hospital.getPatient(pid));
-             System.out.println("Se notifica la vacuna");
              counter++;
              
              if (counter % maximum == 0)
@@ -156,11 +148,9 @@ public class HcareWorker extends Thread{
                      System.out.println("Awaken while having a break...");
                  }
              }
-             
         }
         catch (InterruptedException ex) 
         {
-             // interrupted exception in case that it got 
             System.out.println("Interrupted while on condition of not working. ");
         }
         finally
@@ -174,11 +164,11 @@ public class HcareWorker extends Thread{
                  desksObsRoom = hospital.getObsRoom().getDesks();
                  desksVaccRoom = hospital.getVaccRoom().getDesks();
                  iDDeskObs = hospital.getObsRoom().checkComplications(hospital.getPatients()).get(0);
-                 desksVaccRoom.get(iDDeskVacc).setWorker(-1);
-                 desksObsRoom.get(iDDeskObs).setWorker(hid);
+                 desksVaccRoom.get(iDDeskVacc-1).setWorker(-1);
+                 desksObsRoom.get(iDDeskObs-1).setWorker(hid);
                  hospital.getObsRoom().checkComplications(hospital.getPatients()).remove(0);
                  iDDeskVacc = -1;
-                 int idPatient = desksObsRoom.get(iDDeskObs).getPatient();
+                 int idPatient = desksObsRoom.get(iDDeskObs-1).getPatient();
                  timeWithComplications = 2000 + (int) Math.random() * 3001;
                  hospital.getPatient(idPatient).setTimeWithComplications(timeWithComplications);
                  lock.unlock();
@@ -203,13 +193,13 @@ public class HcareWorker extends Thread{
     public void signalNoWorkToDo(){
         lock.lock();
         try {
-            noWorkToDo.signal(); // puede dar illegal monitor exception, ver si sucede o no.
+            noWorkToDo.signal();
         } finally {
             lock.unlock();
         }
     }
 
-    public boolean isVaccinating() {
+    public synchronized boolean isVaccinating() {
         return isVaccinating;
     }
     

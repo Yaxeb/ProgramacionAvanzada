@@ -7,8 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class VaccRoom {
     private final AtomicInteger vaccines; 
@@ -68,6 +66,7 @@ public class VaccRoom {
         Desk d = desks.get(iDDesk-1);
         d.setPatient(-1);
         desks.set(iDDesk-1, d);
+        semDesks.release();
     }
     
     /**
@@ -86,7 +85,6 @@ public class VaccRoom {
         int i = 0;
         try{
             semDesks.acquire();
-            //desksLock.lock();
             boolean found = false;
             while(!found)
             {
@@ -105,10 +103,6 @@ public class VaccRoom {
                      // we have found the first available desk, we still need to add 1
             }
         }catch(Exception e){}
-        //finally
-        //{
-            //desksLock.unlock();
-        //}
         return i;
     }
     
@@ -124,13 +118,12 @@ public class VaccRoom {
                 vaccinating.await();
                 } catch (InterruptedException ex) {}
             }
-        }catch(Exception e){}
+        }
+        catch(Exception e){}
         finally
         {
             vaccLock.unlock();
         }
-        
-        
     }
     
     public void notifyVaccine(Patient patient)
@@ -145,7 +138,6 @@ public class VaccRoom {
             vaccLock.unlock();
         }
     }
-    /// returns the number of available vaccines
     /**
      * This method returns the number of available vaccines
      * @return The number of available vaccines
@@ -154,7 +146,6 @@ public class VaccRoom {
         return vaccines.get();
     }
     
-    /// Increments the number of vaccines in 1.
     /**
      * This method increments the number of available vaccines by 1
      */
@@ -162,7 +153,6 @@ public class VaccRoom {
         vaccines.set(vaccines.addAndGet(1));
     }
     
-    /// Reduces the number of vaccines in 1.
     /**
      * This method decrements the number of available vaccines by 1
      */
@@ -170,7 +160,6 @@ public class VaccRoom {
         vaccines.set(vaccines.decrementAndGet());
     }
     
-    /// returns all the desks from the Vaccination Room
     /**
      * This method returns all the desks from the Vaccination Room
      * @return An ArrayList containing all desks from the Vaccination Room

@@ -10,6 +10,7 @@ public class Patient extends Thread{
     private int timeToGetDesk;
     private int timeToVaccine;
     private int timeWithComplications;
+    private boolean waitToGetVaccinated;
   //  private CustomLogger clogger;
     
     /**
@@ -19,7 +20,7 @@ public class Patient extends Thread{
      */
     public Patient(int pid, Hospital hospital) {
         this.pid = pid;
-        this.randomChance = 2; //(int) (Math.random() * 101);
+        this.randomChance = (int) (Math.random() * 101);
         this.timeWithComplications = 0;
         this.hospital = hospital;
        // this.clogger = hospital.getLogger();
@@ -32,30 +33,13 @@ public class Patient extends Thread{
         //clogger.log("Patient " + pid + " Entered the hospital. ");
         int iDDesk = hospital.enterReception(this, hospital.getReception().getAuxWorker());
         //clogger.log("Patient " + pid + " Passed through reception. ");
-        if (iDDesk != 0) { 
-            
-            try {
-            // tengo que obtener el hcareworker que esté ahi
-                sleep(timeToGetDesk); //DUDAS CON ESTO
-            } 
-            catch (InterruptedException ex) 
-            {
-                Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        if (iDDesk != 0) {
             int obsDesk = hospital.enterVaccRoom(this, iDDesk);
-            try 
-            {
-                sleep(timeToVaccine); //DUDAS
-            } 
-            catch (InterruptedException ex)
-            {
-                Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            hospital.enterObservationRoom(this, obsDesk);
-            
-            try { 
+             hospital.enterObservationRoom(this, obsDesk);
+            try
+            { 
                 sleep(timeWithComplications);
-            } 
+            }
             catch (InterruptedException ex) 
             {
                 Logger.getLogger(Patient.class.getName()).log(Level.SEVERE, null, ex);
@@ -63,7 +47,7 @@ public class Patient extends Thread{
         }
     }
 
-    
+ 
     public void setTimeToGetDesk(int time){
         this.timeToGetDesk = time;
     }

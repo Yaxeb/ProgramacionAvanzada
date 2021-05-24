@@ -173,6 +173,8 @@ public class Hospital {
             }
         }
         obsRoom.exitPatient(patient, iDDesk);
+        System.out.println("Patient P"+String.format("%04d", patient.getPid())+" exits the hospital");
+        clogger.write("Patient P"+String.format("%04d", patient.getPid())+ " exits the hospital", "Observation Room");
         semEnterObs.release();
         capacity.addAndGet(-1);
         removePatient(patient);

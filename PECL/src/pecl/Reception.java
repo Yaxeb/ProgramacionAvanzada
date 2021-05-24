@@ -37,7 +37,6 @@ public class Reception {
             wLock.lock();
             //waitingSemaphore.acquire();
             waitingQ.add(patient);
-            System.out.println("EntraWaiting");
         }catch(Exception e){}
         finally
         {
@@ -57,7 +56,6 @@ public class Reception {
             wLock.lock();
             //waitingSemaphore.acquire();
             waitingQ.remove(patient);
-            System.out.println("SaleWaiting");
         }catch(Exception e){}
         finally
         {
@@ -76,7 +74,6 @@ public class Reception {
             eLock.lock();
             //enteringSemaphore.acquire();
             enteringQ.add(patient);
-            System.out.println("EntraEnter");
         }catch(Exception e){}
         finally
         {
@@ -95,7 +92,6 @@ public class Reception {
             eLock.lock();
             //enteringSemaphore.acquire();
             enteringQ.remove(patient);
-            System.out.println("SaleEntering");
         }catch(Exception e){}
         finally
         {

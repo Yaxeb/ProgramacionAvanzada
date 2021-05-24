@@ -83,6 +83,7 @@ public class Hospital {
     
     public int enterVaccRoom(Patient patient, int iDDesk){
         vaccRoom.sitPatient(patient, iDDesk);
+        vaccRoom.vaccinate(patient, hcareWorkers.get(getVaccRoom().getDesks().get(iDDesk-1).getWorker()));
         try //we try to enter the observation room
         {                            
              semEnterObs.acquire();
@@ -254,6 +255,16 @@ public class Hospital {
         Patient patient = patients.get(patientID);
         semPatients.release();
         return patient;
+    }
+    
+    public HashMap<Integer, HcareWorker> getHcareWorkers()
+    {
+        return hcareWorkers;
+    }
+    
+    public synchronized void addWorker(HcareWorker worker)
+    {
+        hcareWorkers.put(worker.getHId(), worker);
     }
     
     public HashMap<Integer, Patient> getPatients(){

@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class VaccRoom {
     private final AtomicInteger vaccines; 
@@ -13,6 +15,8 @@ public class VaccRoom {
     private AuxWorker aWorker;
     private Lock desksLock;
     private Condition availableDesk;
+    private Lock vaccLock;
+    private Condition vaccinating;
     private Semaphore semDesks = new Semaphore(10);
     
     /**
@@ -29,6 +33,9 @@ public class VaccRoom {
         }
         this.desksLock = new ReentrantLock();
         this.availableDesk = desksLock.newCondition();
+        
+        this.vaccLock = new ReentrantLock();
+        this.vaccinating = vaccLock.newCondition();
     }
 
     /**
@@ -103,7 +110,39 @@ public class VaccRoom {
         return i;
     }
     
+    public void vaccinate(Patient patient, HcareWorker worker)
+    {
+        try
+        {
+            vaccLock.lock();
+            while(!worker.isVaccinating())
+            {   
+                try 
+                {
+                vaccinating.await();
+                } catch (InterruptedException ex) {}
+            }
+        }catch(Exception e){}
+        finally
+        {
+            vaccLock.unlock();
+        }
+        
+        
+    }
     
+    public void notifyVaccine(Patient patient)
+    {
+         try
+        {
+            vaccLock.lock();
+            vaccinating.signal();
+        }catch(Exception e){}
+        finally
+        {
+            vaccLock.unlock();
+        }
+    }
     /// returns the number of available vaccines
     /**
      * This method returns the number of available vaccines

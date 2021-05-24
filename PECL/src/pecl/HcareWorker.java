@@ -21,6 +21,7 @@ public class HcareWorker extends Thread{
     private Lock lock;
     private Condition noWorkToDo;
     private Hospital hospital;
+    private boolean isVaccinating;
    // private CustomLogger clogger;
     
     /**
@@ -39,6 +40,7 @@ public class HcareWorker extends Thread{
         this.noWorkToDo = lock.newCondition();
         this.working = false;
         this.iDDeskVacc = -1;
+        this.isVaccinating = false;
        // this.clogger = hospital.getLogger();
     }
     
@@ -115,9 +117,10 @@ public class HcareWorker extends Thread{
         {
             //lock.unlock();
         }
+        System.out.println("LANDMARK 1");
         try
         {
-            lock.lock();
+            //lock.lock();
              desksVaccRoom = hospital.getVaccRoom().getDesks();
              while (desksVaccRoom.get(iDDeskVacc - 1).getPatient() == -1) 
              {
@@ -127,9 +130,13 @@ public class HcareWorker extends Thread{
 
              // Worker has work to do (vaccinate patient). 
              working = true;
+             isVaccinating = true;
              timeToVaccine = 3000 + (int) Math.random() * 2000;
-             int pid = desksVaccRoom.get(iDDeskVacc).getPatient();
-             vaccinatePatient(hospital.getPatient(pid), this, timeToVaccine);
+             sleep(timeToVaccine);
+             int pid = desksVaccRoom.get(iDDeskVacc-1).getPatient();
+             System.out.println("Antes de notificar la vacuna");
+             hospital.getVaccRoom().notifyVaccine(hospital.getPatient(pid));
+             System.out.println("Se notifica la vacuna");
              counter++;
              
              if (counter % maximum == 0)
@@ -157,7 +164,7 @@ public class HcareWorker extends Thread{
         }
         finally
         {
-            lock.unlock();
+            //lock.unlock();
         }
              // checking if any patient is requesting help due to complications
              while (!hospital.getObsRoom().checkComplications(hospital.getPatients()).isEmpty()) {
@@ -196,12 +203,9 @@ public class HcareWorker extends Thread{
     public synchronized void signalNoWorkToDo(){
         noWorkToDo.signal(); // puede dar illegal monitor exception, ver si sucede o no.
     }
-    
-    
-    
-    public void vaccinatePatient(Patient patient, HcareWorker hcWorker, int time){
-        patient.setTimeToVaccine(time);
-        hcWorker.setTimeToVaccine(time);
+
+    public boolean isVaccinating() {
+        return isVaccinating;
     }
     
     public boolean isWorking(){

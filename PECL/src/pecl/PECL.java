@@ -21,7 +21,7 @@ public class PECL {
         ArrayList<HcareWorker> l = new ArrayList<>();
         for (int i = 1; i<= 10; i++)
         {
-            HcareWorker worker = new HcareWorker(i, 0,hospital);
+            HcareWorker worker = new HcareWorker(i, hospital);
             hospital.addWorker(worker);
             worker.start();
         }

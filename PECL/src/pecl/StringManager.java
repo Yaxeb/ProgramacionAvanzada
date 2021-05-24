@@ -3,8 +3,8 @@ import hospitalInterface.*;
 import java.util.ArrayList;
 
 public class StringManager extends Thread{
-    Hospital hospital;
-    MainWindow window;
+    private Hospital hospital;
+    private MainWindow window;
     /**
      * Constructor method for StringManager
      * @param hospital The hospital which information is displayed

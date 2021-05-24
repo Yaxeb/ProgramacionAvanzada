@@ -124,10 +124,6 @@ public class AuxWorker extends Thread {
         return aid;
     }
 
-    public int checkArrivingPatient() {
-
-        return 0;
-    }
     
     public boolean isResting(){
         return this.isResting;

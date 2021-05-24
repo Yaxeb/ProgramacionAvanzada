@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 public class HcareWorker extends Thread{
     private int hid;
-    private int pVaccinated;
     private int iDDeskVacc;
     private int iDDeskObs;
     private int timeToVaccine;
@@ -30,9 +29,8 @@ public class HcareWorker extends Thread{
      * @param pVaccinated
      * @param hospital
      */
-    public HcareWorker(int id, int pVaccinated, Hospital hospital) {
+    public HcareWorker(int id, Hospital hospital) {
         this.hid = id;
-        this.pVaccinated = pVaccinated;
         this.hospital = hospital;
         this.beenAwaken = false;
         this.maximum = 2;
@@ -204,7 +202,7 @@ public class HcareWorker extends Thread{
     }
     
     public boolean isWorking(){
-        return this.isWorking();
+        return this.working;
     }
     
     
@@ -212,20 +210,10 @@ public class HcareWorker extends Thread{
         this.timeToVaccine = time;
     }
     
-    public void takeBreak(){
-        
-    }
     
     public int getHId() {
         return hid;
     }
 
-    public int getpVaccinated() {
-        return pVaccinated;
-    }
-
-    public void setpVaccinated(int pVaccinated) {
-        this.pVaccinated = pVaccinated;
-    }
 
 }
